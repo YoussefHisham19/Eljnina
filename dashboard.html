@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم - الجنينة</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #2d2d2d;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    .dark {
+      --background: #1a1a1a;
+      --foreground: #faf9f7;
+      --glass-bg: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    .growth-branch {
+      transition: fill 1s ease-in-out, stroke 1s ease-in-out;
+      fill: #dbeafe; /* blue-100 */
+      stroke: #93c5fd; /* blue-300 */
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+    .growth-branch.filled {
+      fill: #3b82f6; /* blue-500 */
+      stroke: #1d4ed8; /* blue-700 */
+    }
+    .liquid-fill {
+      animation: liquid 2s ease-in-out;
+    }
+    @keyframes liquid {
+      0% { transform: scaleY(0); }
+      100% { transform: scaleY(1); }
+    }
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-nav {
+      background: rgba(20, 20, 20, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .section-padding { padding-left: 1rem; padding-right: 1rem; }
+    @media (min-width: 640px) { .section-padding { padding-left: 1.5rem; padding-right: 1.5rem; } }
+    @media (min-width: 1024px) { .section-padding { padding-left: 2rem; padding-right: 2rem; } }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Mobile Header -->
+  <div class="lg:hidden glass-nav p-4 flex items-center justify-between sticky top-0 z-50">
+    <span class="font-serif text-xl font-bold text-blue-700 dark:text-blue-300">الجنينة</span>
+    <span class="text-sm text-blue-500">لوحة المعلم</span>
+    <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card">
+      <i id="theme-icon" class="fas fa-moon text-blue-600"></i>
+    </button>
+  </div>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex flex-col w-64 min-h-screen glass-card border-r border-sage-200 dark:border-sage-800 m-4 rounded-2xl">
+      <!-- Logo -->
+      <div class="p-6 border-b border-sage-200 dark:border-sage-800">
+        <h1 class="font-serif text-2xl font-bold text-sage-700 dark:text-sage-300">الجنينة</h1>
+        <p class="text-xs text-sage-500 mt-1">لوحة المعلم</p>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="flex-1 p-4">
+        <ul class="space-y-2">
+          <li>
+            <button onclick="setTab('overview')" id="tab-overview" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-yellow-500 text-white shadow-lg border-2 border-yellow-400">
+              <i class="fas fa-chart-pie w-5 h-5"></i>
+              <span class="font-medium">نظرة عامة</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="setTab('courses')" id="tab-courses" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
+              <i class="fas fa-book w-5 h-5"></i>
+              <span class="font-medium">دوراتي</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="setTab('quizzes')" id="tab-quizzes" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
+              <i class="fas fa-question-circle w-5 h-5"></i>
+              <span class="font-medium">الاختبارات</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="setTab('wallet')" id="tab-wallet" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
+              <i class="fas fa-wallet w-5 h-5"></i>
+              <span class="font-medium">المحفظة</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="setTab('growth')" id="tab-growth" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
+              <i class="fas fa-tree w-5 h-5"></i>
+              <span class="font-medium">النمو</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Logout -->
+      <div class="p-4 border-t border-sage-200 dark:border-sage-800">
+        <button class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
+          <i class="fas fa-sign-out-alt w-5 h-5"></i>
+          <span class="font-medium">تسجيل الخروج</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 lg:p-8">
+      <!-- Overview Tab Content -->
+      <div id="content-overview">
+        <!-- Header -->
+        <div class="mb-8">
+          <h2 class="text-2xl lg:text-3xl font-bold text-blue-800 dark:text-blue-100">مرحباً، أستاذ أحمد</h2>
+          <p class="text-blue-500 mt-1">إليك ملخص نشاطك اليوم</p>
+        </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <!-- Total Students -->
+        <div class="glass-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+              <i class="fas fa-users w-6 h-6 text-blue-600"></i>
+            </div>
+            <span class="text-xs text-blue-400">+12 هذا الشهر</span>
+          </div>
+          <p class="text-sm text-blue-500">إجمالي الطلاب</p>
+          <p class="text-2xl font-bold text-blue-800 dark:text-blue-100">128</p>
+        </div>
+
+        <!-- Total Sales -->
+        <div class="glass-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+              <i class="fas fa-dollar-sign w-6 h-6 text-green-600"></i>
+            </div>
+            <span class="text-xs text-green-500">+8% ↑</span>
+          </div>
+          <p class="text-sm text-blue-500">إجمالي المبيعات</p>
+          <p class="text-2xl font-bold text-blue-800 dark:text-blue-100">15,420 ر.س</p>
+        </div>
+
+        <!-- Platform Fee -->
+        <div class="glass-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+              <i class="fas fa-chart-line w-6 h-6 text-amber-600"></i>
+            </div>
+            <span class="text-xs text-sage-400">10%</span>
+          </div>
+          <p class="text-sm text-sage-500">رسوم المنصة (10%)</p>
+          <p class="text-2xl font-bold text-amber-600">1,542 ر.س</p>
+        </div>
+
+        <!-- Net Balance -->
+        <div class="glass-card p-6 border-2 border-sage-400">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl bg-sage-500/20 flex items-center justify-center">
+              <i class="fas fa-wallet w-6 h-6 text-sage-600"></i>
+            </div>
+            <span class="text-xs text-sage-400">× 0.9</span>
+          </div>
+          <p class="text-sm text-sage-500">الرصيد الصافي</p>
+          <p class="text-2xl font-bold text-sage-700 dark:text-sage-300">13,878 ر.س</p>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Add Course Form -->
+        <div class="glass-card p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+              <i class="fas fa-upload w-5 h-5 text-blue-600"></i>
+            </div>
+            <h3 class="text-lg font-bold text-sage-800 dark:text-sage-100">إضافة دورة جديدة</h3>
+          </div>
+
+          <form onsubmit="event.preventDefault(); alert('تم رفع الدورة بنجاح!');" class="space-y-4">
+            <div>
+              <label class="block text-sm text-sage-600 dark:text-sage-400 mb-2">عنوان الدورة</label>
+              <input type="text" class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-sage-700 bg-white/50 dark:bg-sage-800/50 focus:outline-none focus:ring-2 focus:ring-sage-400" placeholder="مثال: مقدمة في البرمجة">
+            </div>
+
+            <div>
+              <label class="block text-sm text-sage-600 dark:text-sage-400 mb-2">رابط الفيديو (Bunny.net)</label>
+              <input type="url" class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-sage-700 bg-white/50 dark:bg-sage-800/50 focus:outline-none focus:ring-2 focus:ring-sage-400" placeholder="https://videos.bunny.net/...">
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all">
+              رفع
+            </button>
+          </form>
+        </div>
+
+        <!-- Recent Courses -->
+        <div class="glass-card p-6">
+          <h3 class="text-lg font-bold text-sage-800 dark:text-sage-100 mb-6">الدورات الحديثة</h3>
+
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-sage-800/30">
+              <div>
+                <h4 class="font-medium text-sage-800 dark:text-sage-100">مقدمة في الرياضيات</h4>
+                <p class="text-sm text-sage-500">45 طالب</p>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-sage-700 dark:text-sage-300">4,500 ر.س</p>
+                <p class="text-xs text-sage-400">الإيرادات</p>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-sage-800/30">
+              <div>
+                <h4 class="font-medium text-sage-800 dark:text-sage-100">الفيزياء الأساسية</h4>
+                <p class="text-sm text-sage-500">38 طالب</p>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-sage-700 dark:text-sage-300">3,800 ر.س</p>
+                <p class="text-xs text-sage-400">الإيرادات</p>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-sage-800/30">
+              <div>
+                <h4 class="font-medium text-sage-800 dark:text-sage-100">الكيمياء العضوية</h4>
+                <p class="text-sm text-sage-500">25 طالب</p>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-sage-700 dark:text-sage-300">2,500 ر.س</p>
+                <p class="text-xs text-sage-400">الإيرادات</p>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Growth Tab Content -->
+      <div id="content-growth" class="hidden">
+        <div class="glass-card p-6 mb-6">
+          <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 mb-4">نمو ديناميكي</h3>
+          <p class="text-blue-600 dark:text-blue-400 mb-4">شجرة النمو تتطور مع إنجازاتك</p>
+          <div class="text-center mb-4">
+            <p class="text-sm text-blue-500">عدد الطلاب: <span class="font-bold text-blue-700">128</span></p>
+          </div>
+          <div id="growth-tree-dashboard" class="w-full max-w-sm mx-auto" style="height: 400px;"></div>
+          <div class="mt-4">
+            <input type="range" id="completion-slider-dashboard" min="0" max="100" value="0" class="w-full" oninput="updateGrowthDashboard(this.value)">
+            <p class="text-blue-600 mt-2">النسبة المئوية للإنجاز: <span id="percentage-dashboard">0</span>%</p>
+          </div>
+        </div>
+        <div id="level-up-dashboard" class="level-up glass-card p-6 hidden">
+          <h2 class="font-serif text-2xl font-bold text-blue-800 dark:text-blue-100 mb-4">مستوى جديد!</h2>
+          <p class="text-blue-600 dark:text-blue-400 mb-4">تهانينا! لقد أكملت 100% من المهام.</p>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
+            الانتقال إلى المنصة الخاصة
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 glass-nav border-t border-sage-200 dark:border-sage-800 z-50">
+    <ul class="flex justify-around p-2">
+      <li>
+        <button onclick="setTab('overview')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-600">
+          <i class="fas fa-chart-pie w-5 h-5"></i>
+          <span class="text-xs">نظرة عامة</span>
+        </button>
+      </li>
+      <li>
+        <button onclick="setTab('courses')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
+          <i class="fas fa-book w-5 h-5"></i>
+          <span class="text-xs">دوراتي</span>
+        </button>
+      </li>
+      <li>
+        <button onclick="setTab('quizzes')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
+          <i class="fas fa-question-circle w-5 h-5"></i>
+          <span class="text-xs">اختبارات</span>
+        </button>
+      </li>
+      <li>
+        <button onclick="setTab('wallet')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
+          <i class="fas fa-wallet w-5 h-5"></i>
+          <span class="text-xs">المحفظة</span>
+        </button>
+      </li>
+      <li>
+        <button onclick="setTab('growth')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
+          <i class="fas fa-tree w-5 h-5"></i>
+          <span class="text-xs">النمو</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Padding for mobile nav -->
+  <div class="lg:hidden h-20"></div>
+
+  <script>
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Tab switching
+    function setTab(tab) {
+      // Reset all tabs
+      ['overview', 'courses', 'quizzes', 'wallet', 'growth'].forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        if (btn) {
+          btn.classList.remove('bg-yellow-500', 'text-white', 'shadow-lg', 'border-2', 'border-yellow-400');
+          btn.classList.add('text-blue-600', 'dark:text-blue-400', 'hover:bg-blue-100', 'dark:hover:bg-blue-800');
+        }
+        const content = document.getElementById('content-' + t);
+        if (content) {
+          content.classList.add('hidden');
+        }
+      });
+      
+      // Set active tab
+      const activeBtn = document.getElementById('tab-' + tab);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-blue-600', 'dark:text-blue-400', 'hover:bg-blue-100', 'dark:hover:bg-blue-800');
+        activeBtn.classList.add('bg-yellow-500', 'text-white', 'shadow-lg', 'border-2', 'border-yellow-400');
+      }
+      const activeContent = document.getElementById('content-' + tab);
+      if (activeContent) {
+        activeContent.classList.remove('hidden');
+      }
+    }
+
+    let sceneDashboard, cameraDashboard, rendererDashboard, treeGroupDashboard;
+    let branchesDashboard = [];
+    let leavesDashboard = [];
+
+    function initThreeJSDashboard() {
+      // Scene setup
+      sceneDashboard = new THREE.Scene();
+      sceneDashboard.background = new THREE.Color(0xffffff);
+
+      // Camera setup
+      cameraDashboard = new THREE.PerspectiveCamera(75, 300/400, 0.1, 1000);
+      cameraDashboard.position.set(0, 0, 4);
+      cameraDashboard.lookAt(0, 0, 0);
+
+      // Renderer setup
+      rendererDashboard = new THREE.WebGLRenderer({ antialias: true });
+      rendererDashboard.setSize(300, 400);
+      rendererDashboard.shadowMap.enabled = true;
+      rendererDashboard.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      // Add renderer to DOM
+      const container = document.getElementById('growth-tree-dashboard');
+      container.appendChild(rendererDashboard.domElement);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+      sceneDashboard.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(5, 5, 5);
+      directionalLight.castShadow = true;
+      sceneDashboard.add(directionalLight);
+
+      // Create tree group
+      treeGroupDashboard = new THREE.Group();
+      sceneDashboard.add(treeGroupDashboard);
+
+      // Create tree
+      createTreeDashboard();
+
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        rendererDashboard.render(sceneDashboard, cameraDashboard);
+      }
+      animate();
+    }
+
+    function createTreeDashboard() {
+      // Oak Tree trunk - thicker and more gnarled
+      const trunkGeometry = new THREE.CylinderGeometry(0.12, 0.2, 2, 12);
+      const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+      const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+      trunk.position.y = -1;
+      trunk.castShadow = true;
+      trunk.receiveShadow = true;
+      treeGroupDashboard.add(trunk);
+
+      // Add bark texture details
+      for (let i = 0; i < 6; i++) {
+        const barkDetailGeometry = new THREE.CylinderGeometry(0.13, 0.14, 0.08, 8);
+        const barkDetailMaterial = new THREE.MeshLambertMaterial({ color: 0x654321 });
+        const barkDetail = new THREE.Mesh(barkDetailGeometry, barkDetailMaterial);
+        barkDetail.position.set(
+          (Math.random() - 0.5) * 0.08,
+          -0.6 + i * 0.25,
+          (Math.random() - 0.5) * 0.08
+        );
+        barkDetail.castShadow = true;
+        treeGroupDashboard.add(barkDetail);
+      }
+
+      // Roots - more extensive oak root system
+      for (let i = 0; i < 6; i++) {
+        const rootGeometry = new THREE.CylinderGeometry(0.025, 0.06, 0.3 + Math.random() * 0.2, 6);
+        const rootMaterial = new THREE.MeshLambertMaterial({ color: 0x654321 });
+        const root = new THREE.Mesh(rootGeometry, rootMaterial);
+        const angle = (i / 6) * Math.PI * 2;
+        const distance = 0.25 + Math.random() * 0.15;
+        root.position.set(Math.cos(angle) * distance, -1.25, Math.sin(angle) * distance);
+        root.rotation.z = angle + (Math.random() - 0.5) * 0.3;
+        root.rotation.x = (Math.random() - 0.5) * 0.2;
+        root.castShadow = true;
+        treeGroupDashboard.add(root);
+      }
+
+      // Oak branches - more complex branching structure
+      const branchLevels = 10;
+      for (let level = 0; level < branchLevels; level++) {
+        const thickness = Math.max(0.035, 0.07 - level * 0.004);
+        const length = Math.max(0.25, 0.9 - level * 0.06);
+        const branchGeometry = new THREE.CylinderGeometry(thickness * 0.7, thickness, length, 8);
+        const branchMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+        const branch = new THREE.Mesh(branchGeometry, branchMaterial);
+        
+        const y = -0.6 + level * 0.14;
+        const angle = (level % 3 === 0) ? Math.PI / 5 : (level % 3 === 1) ? -Math.PI / 5 : Math.PI / 10;
+        const xOffset = (level % 2 === 0) ? 0.08 : -0.08;
+        
+        branch.position.set(xOffset, y, 0);
+        branch.rotation.z = angle;
+        branch.rotation.x = (Math.random() - 0.5) * 0.15;
+        branch.castShadow = true;
+        branch.visible = false;
+        
+        branchesDashboard.push(branch);
+        treeGroupDashboard.add(branch);
+      }
+
+      // Oak leaves - more realistic lobed oak leaf shapes
+      const leafGeometry = new THREE.PlaneGeometry(0.1, 0.15);
+      const leafMaterial1 = new THREE.MeshLambertMaterial({ 
+        color: 0x228B22, 
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.95
+      });
+      const leafMaterial2 = new THREE.MeshLambertMaterial({ 
+        color: 0x32CD32, 
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.95
+      });
+      const leafMaterial3 = new THREE.MeshLambertMaterial({ 
+        color: 0x006400, 
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.95
+      });
+
+      for (let i = 0; i < 50; i++) {
+        const leafMaterial = [leafMaterial1, leafMaterial2, leafMaterial3][Math.floor(Math.random() * 3)];
+        const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+        
+        // Position leaves in a more natural oak tree canopy
+        const radius = 0.4 + Math.random() * 1.2;
+        const angle = Math.random() * Math.PI * 2;
+        const height = Math.random() * 1.4 - 0.1;
+        
+        leaf.position.set(
+          Math.cos(angle) * radius,
+          height,
+          Math.sin(angle) * radius
+        );
+        
+        // Add some natural variation to leaf orientation
+        leaf.rotation.set(
+          Math.random() * Math.PI * 0.5 - Math.PI * 0.25,
+          Math.random() * Math.PI,
+          Math.random() * Math.PI * 0.3 - Math.PI * 0.15
+        );
+        
+        leaf.castShadow = true;
+        leaf.visible = false;
+        
+        leavesDashboard.push(leaf);
+        treeGroupDashboard.add(leaf);
+      }
+
+      // Add some acorns for extra realism
+      for (let i = 0; i < 10; i++) {
+        const acornGeometry = new THREE.CapsuleGeometry(0.015, 0.03, 4, 8);
+        const acornMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+        const acorn = new THREE.Mesh(acornGeometry, acornMaterial);
+        
+        const radius = 0.6 + Math.random() * 0.8;
+        const angle = Math.random() * Math.PI * 2;
+        
+        acorn.position.set(
+          Math.cos(angle) * radius,
+          Math.random() * 0.4 - 0.7,
+          Math.sin(angle) * radius
+        );
+        
+        acorn.rotation.set(
+          Math.random() * Math.PI,
+          Math.random() * Math.PI,
+          Math.random() * Math.PI
+        );
+        
+        acorn.castShadow = true;
+        acorn.visible = false;
+        
+        leavesDashboard.push(acorn); // Add to leaves array for growth animation
+        treeGroupDashboard.add(acorn);
+      }
+    }
+
+    function updateGrowthDashboard(percentage) {
+      document.getElementById('percentage-dashboard').textContent = percentage;
+      const levelUp = document.getElementById('level-up-dashboard');
+
+      // Update branches
+      const branchThreshold = 100 / branchesDashboard.length;
+      branchesDashboard.forEach((branch, index) => {
+        const threshold = (index + 1) * branchThreshold;
+        branch.visible = percentage >= threshold;
+      });
+
+      // Update leaves
+      const leafThreshold = 100 / leavesDashboard.length;
+      leavesDashboard.forEach((leaf, index) => {
+        const threshold = (index + 1) * leafThreshold;
+        leaf.visible = percentage >= threshold;
+        
+        if (leaf.visible) {
+          leaf.rotation.x += 0.005;
+          leaf.rotation.y += 0.003;
+        }
+      });
+
+      if (percentage == 100) {
+        levelUp.classList.remove('hidden');
+      } else {
+        levelUp.classList.add('hidden');
+      }
+    }
+
+    // Initialize Three.js when page loads
+    window.addEventListener('load', initThreeJSDashboard);
+
+    // Initialize
+    updateGrowthDashboard(0);
+  </script>
+</body>
+</html>

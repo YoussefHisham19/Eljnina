@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الجنينة - منصة التعليم الذكي</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            garden: {
+              light: '#faf9f7',
+              cream: '#f5f3ef',
+              blue: '#3b82f6',
+              moss: '#2563eb',
+              leaf: '#93c5fd',
+              dark: '#2d2d2d',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #2d2d2d;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    .dark {
+      --background: #1a1a1a;
+      --foreground: #faf9f7;
+      --glass-bg: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: 'Cairo', system-ui, sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-nav {
+      background: rgba(20, 20, 20, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+    .btn-secondary {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      border: 2px solid #f59e0b;
+      color: #d97706;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: #f59e0b;
+      color: white;
+    }
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .section-padding {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    @media (min-width: 640px) {
+      .section-padding { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+    @media (min-width: 1024px) {
+      .section-padding { padding-left: 2rem; padding-right: 2rem; }
+    }
+    @media (min-width: 1280px) {
+      .section-padding { padding-left: 4rem; padding-right: 4rem; }
+    }
+    @media (min-width: 1536px) {
+      .section-padding { padding-left: 6rem; padding-right: 6rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass-nav">
+    <div class="section-padding">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-2">
+          <span class="text-2xl font-serif font-bold text-blue-600 dark:text-blue-300">الجنينة</span>
+          <span class="hidden sm:block text-sm text-blue-500 dark:text-blue-400">The Garden</span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#hero" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">الرئيسية</a>
+          <a href="#steps" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">خطوات النمو</a>
+          <a href="dashboard.html" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">لوحة التحكم</a>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-3">
+          <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors" aria-label="Toggle theme">
+            <i id="theme-icon" class="fas fa-moon w-5 h-5 text-blue-600"></i>
+          </button>
+          <button onclick="toggleLanguage()" class="p-2 rounded-lg glass-card hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors" aria-label="Toggle language">
+            <i class="fas fa-globe w-5 h-5 text-blue-600"></i>
+          </button>
+          <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg glass-card hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors" aria-label="Toggle menu">
+            <i id="menu-icon" class="fas fa-bars w-5 h-5 text-blue-600"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden py-4 border-t border-blue-200 dark:border-blue-700">
+        <div class="flex flex-col gap-4">
+          <a href="#hero" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">الرئيسية</a>
+          <a href="#steps" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">خطوات النمو</a>
+          <a href="dashboard.html" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">لوحة التحكم</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-green-300/20 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+      <div class="absolute top-1/2 left-1/2 w-48 h-48 bg-yellow-300/20 rounded-full blur-2xl animate-float" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 section-padding text-center max-w-5xl mx-auto">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8">
+        <i class="fas fa-leaf w-4 h-4 text-blue-600 dark:text-blue-400"></i>
+        <span id="hero-badge" class="text-sm text-blue-600 dark:text-blue-400">منصة التعليم الذكي</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 id="hero-headline" class="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-blue-800 dark:text-blue-100 mb-6 leading-tight">
+        ابدأ زراعة غصنك التعليمي الآن
+      </h1>
+
+      <!-- Subheadline -->
+      <p id="hero-subheadline" class="text-lg sm:text-xl text-blue-600 dark:text-blue-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+        منصة الجنينة تمنحك المساحة الخاصة لتنمية معرفتك وزراعة مستقبلك
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#steps" id="cta-primary" class="btn-primary w-full sm:w-auto text-center">ابدأ رحلتك</a>
+        <a href="#steps" id="cta-secondary" class="btn-secondary w-full sm:w-auto text-center">اعرف المزيد</a>
+      </div>
+
+      <!-- Scroll Indicator -->
+      <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <i class="fas fa-arrow-down w-6 h-6 text-yellow-400"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- Steps Section -->
+  <section id="steps" class="py-24 relative">
+    <div class="section-padding">
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <h2 id="steps-title" class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-blue-800 dark:text-blue-100 mb-4">خطوات النمو</h2>
+        <p id="steps-subtitle" class="text-blue-600 dark:text-blue-400 max-w-xl mx-auto">رحلتك نحو النجاح التعليمي تبدأ من هنا</p>
+      </div>
+
+      <!-- Steps Container -->
+      <div class="relative max-w-6xl mx-auto">
+        <!-- Connection Line -->
+        <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-green-400 to-yellow-400 dark:from-blue-600 dark:via-green-600 dark:to-yellow-600 transform -translate-y-1/2 rounded-full"></div>
+
+        <!-- Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <!-- Garden -->
+          <div class="relative group">
+            <div class="glass-card p-6 h-full transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-xl">
+              <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">1</div>
+              <div class="w-14 h-14 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+                <i class="fas fa-building w-7 h-7 text-blue-600"></i>
+              </div>
+              <h3 class="font-serif text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">الجنينة</h3>
+              <p class="text-sm text-blue-600 dark:text-blue-400 leading-relaxed">التحكم العام لإدارة جميع الأشجار</p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>إدارة المنصة</span></li>
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>الإشراف على المراكز</span></li>
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>التقارير العامة</span></li>
+              </ul>
+            </div>
+            <div class="hidden lg:block absolute top-1/2 -left-4 transform -translate-y-1/2 z-10">
+              <div class="w-8 h-8 rounded-full bg-blue-300 dark:bg-blue-700 flex items-center justify-center"><span class="text-blue-600 dark:text-blue-300 text-xs">←</span></div>
+            </div>
+          </div>
+
+          <!-- Tree -->
+          <div class="relative group">
+            <div class="glass-card p-6 h-full transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-xl">
+              <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">2</div>
+              <div class="w-14 h-14 rounded-xl bg-green-500/20 flex items-center justify-center mb-4">
+                <i class="fas fa-tree w-7 h-7 text-green-600"></i>
+              </div>
+              <h3 class="font-serif text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">الشجرة</h3>
+              <p class="text-sm text-blue-600 dark:text-blue-400 leading-relaxed">مساحة خاصة لكل مركز أو منطقة</p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>إدارة الفروع</span></li>
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>تنظيم المعلمين</span></li>
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>المبيعات المحلية</span></li>
+              </ul>
+            </div>
+            <div class="hidden lg:block absolute top-1/2 -left-4 transform -translate-y-1/2 z-10">
+              <div class="w-8 h-8 rounded-full bg-blue-300 dark:bg-blue-700 flex items-center justify-center"><span class="text-blue-600 dark:text-blue-300 text-xs">←</span></div>
+            </div>
+          </div>
+
+          <!-- Branch -->
+          <div class="relative group">
+            <div class="glass-card p-6 h-full transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-xl">
+              <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">3</div>
+              <div class="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center mb-4">
+                <i class="fas fa-user w-7 h-7 text-yellow-600"></i>
+              </div>
+              <h3 class="font-serif text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">الغصن</h3>
+              <p class="text-sm text-blue-600 dark:text-blue-400 leading-relaxed">صفحة خاصة لكل معلم مع لوحة تحكم مستقلة</p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>رفع الدورات</span></li>
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>إدارة الطلاب</span></li>
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>تتبع الأرباح</span></li>
+              </ul>
+            </div>
+            <div class="hidden lg:block absolute top-1/2 -left-4 transform -translate-y-1/2 z-10">
+              <div class="w-8 h-8 rounded-full bg-blue-300 dark:bg-blue-700 flex items-center justify-center"><span class="text-blue-600 dark:text-blue-300 text-xs">←</span></div>
+            </div>
+          </div>
+
+          <!-- Leaf -->
+          <div class="relative group">
+            <div class="glass-card p-6 h-full transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-xl">
+              <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">4</div>
+              <div class="w-14 h-14 rounded-xl bg-red-500/20 flex items-center justify-center mb-4">
+                <i class="fas fa-seedling w-7 h-7 text-red-600"></i>
+              </div>
+              <h3 class="font-serif text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">الورقة</h3>
+              <p class="text-sm text-blue-600 dark:text-blue-400 leading-relaxed">محتوى حصري للطالب عبر رابط خاص</p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>دروس خاصة</span></li>
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>اختبارات تفاعلية</span></li>
+                <li class="flex items-center gap-2 text-xs text-blue-500 dark:text-blue-500"><i class="fas fa-check-circle w-3 h-3 text-blue-400"></i><span>تتبع التقدم</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center mt-16">
+        <a href="dashboard.html" id="join-cta" class="btn-primary inline-flex items-center gap-2">انضم إلى الجنينة الآن</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 border-t border-blue-200 dark:border-blue-800">
+    <div class="section-padding text-center">
+      <p id="footer-text" class="text-blue-500 dark:text-blue-400 text-sm">© 2024 الجنينة - The Garden. جميع الحقوق محفوظة</p>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Language toggle
+    let currentLang = 'ar';
+    const translations = {
+      ar: {
+        heroBadge: 'منصة التعليم الذكي',
+        heroHeadline: 'ابدأ زراعة غصنك التعليمي الآن',
+        heroSubheadline: 'منصة الجنينة تمنحك المساحة الخاصة لتنمية معرفتك وزراعة مستقبلك',
+        ctaPrimary: 'ابدأ رحلتك',
+        ctaSecondary: 'اعرف المزيد',
+        stepsTitle: 'خطوات النمو',
+        stepsSubtitle: 'رحلتك نحو النجاح التعليمي تبدأ من هنا',
+        joinCta: 'انضم إلى الجنينة الآن',
+        footerText: '© 2024 الجنينة - The Garden. جميع الحقوق محفوظة'
+      },
+      en: {
+        heroBadge: 'Smart Education Platform',
+        heroHeadline: 'Start Growing Your Educational Branch Today',
+        heroSubheadline: 'The Garden platform gives you the private space to nurture your knowledge and grow your future',
+        ctaPrimary: 'Start Your Journey',
+        ctaSecondary: 'Learn More',
+        stepsTitle: 'Growth Steps',
+        stepsSubtitle: 'Your journey towards educational success starts here',
+        joinCta: 'Join The Garden Now',
+        footerText: '© 2024 The Garden. All rights reserved'
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      const html = document.documentElement;
+      
+      if (currentLang === 'en') {
+        html.setAttribute('dir', 'ltr');
+        html.setAttribute('lang', 'en');
+      } else {
+        html.setAttribute('dir', 'rtl');
+        html.setAttribute('lang', 'ar');
+      }
+      
+      // Update text content
+      document.getElementById('hero-badge').textContent = translations[currentLang].heroBadge;
+      document.getElementById('hero-headline').textContent = translations[currentLang].heroHeadline;
+      document.getElementById('hero-subheadline').textContent = translations[currentLang].heroSubheadline;
+      document.getElementById('cta-primary').textContent = translations[currentLang].ctaPrimary;
+      document.getElementById('cta-secondary').textContent = translations[currentLang].ctaSecondary;
+      document.getElementById('steps-title').textContent = translations[currentLang].stepsTitle;
+      document.getElementById('steps-subtitle').textContent = translations[currentLang].stepsSubtitle;
+      document.getElementById('join-cta').textContent = translations[currentLang].joinCta;
+      document.getElementById('footer-text').textContent = translations[currentLang].footerText;
+      
+      localStorage.setItem('language', currentLang);
+    }
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('menu-icon');
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        menu.classList.add('hidden');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    }
+
+    // Load saved preferences
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      const savedLang = localStorage.getItem('language');
+      
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.getElementById('theme-icon').classList.remove('fa-moon');
+        document.getElementById('theme-icon').classList.add('fa-sun');
+      }
+      
+      if (savedLang === 'en') {
+        toggleLanguage();
+      }
+    });
+  </script>
+</body>
+</html>

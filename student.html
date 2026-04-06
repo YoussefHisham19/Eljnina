@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صفحة الطالب - أ.د. محمد العلي</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            sage: {
+              50: '#f6f7f6', 100: '#e3e6e3', 200: '#c7cdc7', 300: '#a3aea3',
+              400: '#8b958c', 500: '#6b736b', 600: '#545b54', 700: '#454a45',
+              800: '#393d39', 900: '#313431',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #2d2d2d;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    .dark {
+      --background: #1a1a1a;
+      --foreground: #faf9f7;
+      --glass-bg: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: 'Cairo', system-ui, sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-nav {
+      background: rgba(20, 20, 20, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .section-padding { padding-left: 1rem; padding-right: 1rem; }
+    @media (min-width: 640px) { .section-padding { padding-left: 1.5rem; padding-right: 1.5rem; } }
+    @media (min-width: 1024px) { .section-padding { padding-left: 2rem; padding-right: 2rem; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="glass-nav sticky top-0 z-50">
+    <div class="section-padding py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-sage-500/20 flex items-center justify-center">
+            <i class="fas fa-user w-5 h-5 text-sage-600"></i>
+          </div>
+          <div>
+            <h1 class="font-serif text-lg font-bold text-sage-800 dark:text-sage-100">أ.د. محمد العلي</h1>
+            <span class="text-xs text-sage-500">حديقة خاصة</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-sage-500/10 text-sage-600 text-sm">
+            <i class="fas fa-graduation-cap w-4 h-4"></i>
+            <span>محتوى حصري</span>
+          </div>
+          <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card hover:bg-sage-100 dark:hover:bg-sage-800 transition-colors">
+            <i id="theme-icon" class="fas fa-moon w-5 h-5 text-sage-600"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="section-padding py-8 flex-1">
+    <!-- Teacher Bio Card -->
+    <div class="glass-card p-6 mb-8 max-w-4xl mx-auto">
+      <div class="flex items-start gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-sage-500/20 flex items-center justify-center flex-shrink-0">
+          <i class="fas fa-user w-8 h-8 text-sage-600"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-sage-800 dark:text-sage-100 mb-2">أ.د. محمد العلي</h2>
+          <p class="text-sage-600 dark:text-sage-400 leading-relaxed">
+            أستاذ متخصص في الرياضيات والفيزياء مع خبرة 15 عاماً في التدريس. أؤمن بأن كل طالب يملك potential عظيم للنجاح.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-2xl font-bold text-sage-800 dark:text-sage-100 mb-6">الدورات المتاحة</h3>
+
+      <div id="courses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Course 1 -->
+        <div class="glass-card overflow-hidden group cursor-pointer transition-all hover:transform hover:-translate-y-2" onclick="openCourse(1)">
+          <div class="aspect-video bg-gradient-to-br from-sage-200 to-sage-300 dark:from-sage-700 dark:to-sage-800 flex items-center justify-center group-hover:from-sage-300 group-hover:to-sage-400 transition-all">
+            <i class="fas fa-play w-12 h-12 text-sage-600/50 group-hover:text-sage-600 group-hover:scale-110 transition-all"></i>
+          </div>
+          <div class="p-5">
+            <h4 class="font-bold text-lg text-sage-800 dark:text-sage-100 mb-2">الرياضيات المتقدمة</h4>
+            <p class="text-sm text-sage-600 dark:text-sage-400 mb-4 line-clamp-2">شرح مفصل لجميع مفاهيم الرياضيات للمرحلة الثانوية</p>
+            <div class="flex items-center justify-between text-sm text-sage-500 mb-4">
+              <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1"><i class="fas fa-clock w-4 h-4"></i> 12 ساعة</span>
+                <span class="flex items-center gap-1"><i class="fas fa-book-open w-4 h-4"></i> 24 درس</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-bold text-sage-700 dark:text-sage-300">350 ر.س</span>
+              <button class="px-4 py-2 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-sm font-medium transition-all">شاهد الآن</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 2 -->
+        <div class="glass-card overflow-hidden group cursor-pointer transition-all hover:transform hover:-translate-y-2" onclick="openCourse(2)">
+          <div class="aspect-video bg-gradient-to-br from-sage-200 to-sage-300 dark:from-sage-700 dark:to-sage-800 flex items-center justify-center group-hover:from-sage-300 group-hover:to-sage-400 transition-all">
+            <i class="fas fa-play w-12 h-12 text-sage-600/50 group-hover:text-sage-600 group-hover:scale-110 transition-all"></i>
+          </div>
+          <div class="p-5">
+            <h4 class="font-bold text-lg text-sage-800 dark:text-sage-100 mb-2">الفيزياء الأساسية</h4>
+            <p class="text-sm text-sage-600 dark:text-sage-400 mb-4 line-clamp-2">أساسيات الفيزياء من الصفر حتى الاحتراف</p>
+            <div class="flex items-center justify-between text-sm text-sage-500 mb-4">
+              <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1"><i class="fas fa-clock w-4 h-4"></i> 10 ساعات</span>
+                <span class="flex items-center gap-1"><i class="fas fa-book-open w-4 h-4"></i> 20 درس</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-bold text-sage-700 dark:text-sage-300">299 ر.س</span>
+              <button class="px-4 py-2 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-sm font-medium transition-all">شاهد الآن</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 3 -->
+        <div class="glass-card overflow-hidden group cursor-pointer transition-all hover:transform hover:-translate-y-2" onclick="openCourse(3)">
+          <div class="aspect-video bg-gradient-to-br from-sage-200 to-sage-300 dark:from-sage-700 dark:to-sage-800 flex items-center justify-center group-hover:from-sage-300 group-hover:to-sage-400 transition-all">
+            <i class="fas fa-play w-12 h-12 text-sage-600/50 group-hover:text-sage-600 group-hover:scale-110 transition-all"></i>
+          </div>
+          <div class="p-5">
+            <h4 class="font-bold text-lg text-sage-800 dark:text-sage-100 mb-2">الكيمياء العضوية</h4>
+            <p class="text-sm text-sage-600 dark:text-sage-400 mb-4 line-clamp-2">تعلم الكيمياء العضوية بأسلوب مبسط وممتع</p>
+            <div class="flex items-center justify-between text-sm text-sage-500 mb-4">
+              <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1"><i class="fas fa-clock w-4 h-4"></i> 15 ساعة</span>
+                <span class="flex items-center gap-1"><i class="fas fa-book-open w-4 h-4"></i> 30 درس</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-bold text-sage-700 dark:text-sage-300">400 ر.س</span>
+              <button class="px-4 py-2 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-sm font-medium transition-all">شاهد الآن</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 4 -->
+        <div class="glass-card overflow-hidden group cursor-pointer transition-all hover:transform hover:-translate-y-2" onclick="openCourse(4)">
+          <div class="aspect-video bg-gradient-to-br from-sage-200 to-sage-300 dark:from-sage-700 dark:to-sage-800 flex items-center justify-center group-hover:from-sage-300 group-hover:to-sage-400 transition-all">
+            <i class="fas fa-play w-12 h-12 text-sage-600/50 group-hover:text-sage-600 group-hover:scale-110 transition-all"></i>
+          </div>
+          <div class="p-5">
+            <h4 class="font-bold text-lg text-sage-800 dark:text-sage-100 mb-2">التحليل الرياضي</h4>
+            <p class="text-sm text-sage-600 dark:text-sage-400 mb-4 line-clamp-2">مفاهيم التفاضل والتكامل بأسلوب شيق</p>
+            <div class="flex items-center justify-between text-sm text-sage-500 mb-4">
+              <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1"><i class="fas fa-clock w-4 h-4"></i> 18 ساعة</span>
+                <span class="flex items-center gap-1"><i class="fas fa-book-open w-4 h-4"></i> 36 درس</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-bold text-sage-700 dark:text-sage-300">450 ر.س</span>
+              <button class="px-4 py-2 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-sm font-medium transition-all">شاهد الآن</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Player View (Hidden by default) -->
+    <div id="video-view" class="hidden max-w-5xl mx-auto mt-8">
+      <!-- Back Button -->
+      <button onclick="closeCourse()" class="flex items-center gap-2 text-sage-600 hover:text-sage-800 mb-6 transition-colors">
+        <i class="fas fa-chevron-left w-5 h-5"></i>
+        <span>العودة للدورات</span>
+      </button>
+
+      <!-- Video Player -->
+      <div class="glass-card overflow-hidden mb-6">
+        <div class="aspect-video bg-sage-900 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <i class="fas fa-play w-16 h-16 text-sage-400 mx-auto mb-4"></i>
+              <p class="text-sage-400">https://videos.bunny.net/example.mp4</p>
+            </div>
+          </div>
+          <!-- Video Controls -->
+          <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+            <div class="flex items-center gap-4 text-white">
+              <button class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-all">
+                <i class="fas fa-play w-5 h-5"></i>
+              </button>
+              <div class="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
+                <div class="w-1/3 h-full bg-sage-400"></div>
+              </div>
+              <span class="text-sm">12:34 / 12:00:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Info -->
+        <div class="p-6">
+          <h2 id="course-title" class="text-2xl font-bold text-sage-800 dark:text-sage-100 mb-2">عنوان الدورة</h2>
+          <p id="course-desc" class="text-sage-600 dark:text-sage-400 mb-4">وصف الدورة</p>
+
+          <!-- Take Quiz Button -->
+          <button onclick="openQuiz()" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all">
+            <i class="fas fa-question-circle w-5 h-5"></i>
+            أخذ الاختبار
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Quiz Modal -->
+  <div id="quiz-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div class="glass-card w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-6 border-b border-sage-200 dark:border-sage-800">
+        <h3 class="text-xl font-bold text-sage-800 dark:text-sage-100">اختبار: <span id="quiz-title">الرياضيات المتقدمة</span></h3>
+        <button onclick="closeQuiz()" class="w-8 h-8 rounded-full hover:bg-sage-100 dark:hover:bg-sage-800 flex items-center justify-center transition-all">
+          <i class="fas fa-times w-5 h-5 text-sage-600"></i>
+        </button>
+      </div>
+
+      <!-- Quiz Content -->
+      <div class="p-6 space-y-6">
+        <!-- Question 1 -->
+        <div class="space-y-3">
+          <p class="font-medium text-sage-800 dark:text-sage-100">1. ما هو المفهوم الأساسي الذي تم شرحه في الدرس؟</p>
+          <div class="space-y-2">
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
+              <input type="radio" name="q1" class="w-4 h-4 text-sage-500">
+              <span class="text-sage-700 dark:text-sage-300">الإجابة أ</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
+              <input type="radio" name="q1" class="w-4 h-4 text-sage-500">
+              <span class="text-sage-700 dark:text-sage-300">الإجابة ب</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
+              <input type="radio" name="q1" class="w-4 h-4 text-sage-500">
+              <span class="text-sage-700 dark:text-sage-300">الإجابة ج</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="space-y-3">
+          <p class="font-medium text-sage-800 dark:text-sage-100">2. أي من التالي يمثل التطبيق العملي؟</p>
+          <div class="space-y-2">
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
+              <input type="radio" name="q2" class="w-4 h-4 text-sage-500">
+              <span class="text-sage-700 dark:text-sage-300">الإجابة أ</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
+              <input type="radio" name="q2" class="w-4 h-4 text-sage-500">
+              <span class="text-sage-700 dark:text-sage-300">الإجابة ب</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
+              <input type="radio" name="q2" class="w-4 h-4 text-sage-500">
+              <span class="text-sage-700 dark:text-sage-300">الإجابة ج</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button onclick="submitQuiz()" class="w-full py-3 rounded-xl bg-sage-500 hover:bg-sage-600 text-white font-medium transition-all">
+          إرسال
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="section-padding py-6 border-t border-sage-200 dark:border-sage-800 mt-auto">
+    <div class="text-center text-sm text-sage-500">
+      <p>© 2024 أ.د. محمد العلي - حديقة خاصة</p>
+      <p class="mt-1 text-xs">هذه الصفحة خاصة ولا يمكن الوصول إليها إلا عبر رابط مباشر</p>
+    </div>
+  </footer>
+
+  <script>
+    const coursesData = {
+      1: { title: 'الرياضيات المتقدمة', desc: 'شرح مفصل لجميع مفاهيم الرياضيات للمرحلة الثانوية' },
+      2: { title: 'الفيزياء الأساسية', desc: 'أساسيات الفيزياء من الصفر حتى الاحتراف' },
+      3: { title: 'الكيمياء العضوية', desc: 'تعلم الكيمياء العضوية بأسلوب مبسط وممتع' },
+      4: { title: 'التحليل الرياضي', desc: 'مفاهيم التفاضل والتكامل بأسلوب شيق' }
+    };
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Open course
+    function openCourse(id) {
+      const course = coursesData[id];
+      document.getElementById('course-title').textContent = course.title;
+      document.getElementById('course-desc').textContent = course.desc;
+      document.getElementById('quiz-title').textContent = course.title;
+      
+      document.getElementById('courses-grid').classList.add('hidden');
+      document.getElementById('video-view').classList.remove('hidden');
+    }
+
+    // Close course
+    function closeCourse() {
+      document.getElementById('courses-grid').classList.remove('hidden');
+      document.getElementById('video-view').classList.add('hidden');
+      closeQuiz();
+    }
+
+    // Open quiz
+    function openQuiz() {
+      document.getElementById('quiz-modal').classList.remove('hidden');
+    }
+
+    // Close quiz
+    function closeQuiz() {
+      document.getElementById('quiz-modal').classList.add('hidden');
+    }
+
+    // Submit quiz
+    function submitQuiz() {
+      alert('تم إرسال إجاباتك بنجاح!');
+      closeQuiz();
+    }
+
+    // Load saved theme
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        const icon = document.getElementById('theme-icon');
+        if (icon) {
+          icon.classList.remove('fa-moon');
+          icon.classList.add('fa-sun');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

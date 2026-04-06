@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Tree Test</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    body { margin: 0; background: #f8fafc; }
+    #tree-container { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="tree-container"></div>
+
+  <script>
+    let scene, camera, renderer, treeGroup;
+    let branches = [];
+    let leaves = [];
+
+    function init() {
+      // Scene setup
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf8fafc);
+
+      // Camera setup
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 5);
+      camera.lookAt(0, 0, 0);
+
+      // Renderer setup
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      // Add renderer to DOM
+      document.getElementById('tree-container').appendChild(renderer.domElement);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(5, 5, 5);
+      directionalLight.castShadow = true;
+      scene.add(directionalLight);
+
+      // Create tree group
+      treeGroup = new THREE.Group();
+      scene.add(treeGroup);
+
+      // Create tree
+      createTree();
+
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    function createTree() {
+      // Tree trunk
+      const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.15, 2, 8);
+      const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+      const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+      trunk.position.y = -1;
+      trunk.castShadow = true;
+      trunk.receiveShadow = true;
+      treeGroup.add(trunk);
+
+      // Roots
+      for (let i = 0; i < 6; i++) {
+        const rootGeometry = new THREE.CylinderGeometry(0.02, 0.05, 0.3, 4);
+        const rootMaterial = new THREE.MeshLambertMaterial({ color: 0x654321 });
+        const root = new THREE.Mesh(rootGeometry, rootMaterial);
+        const angle = (i / 6) * Math.PI * 2;
+        root.position.set(Math.cos(angle) * 0.2, -1.3, Math.sin(angle) * 0.2);
+        root.rotation.z = angle;
+        root.castShadow = true;
+        treeGroup.add(root);
+      }
+
+      // Branches
+      const branchLevels = 10;
+      for (let level = 0; level < branchLevels; level++) {
+        const branchGeometry = new THREE.CylinderGeometry(0.03, 0.05, 0.8 - level * 0.05, 6);
+        const branchMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+        const branch = new THREE.Mesh(branchGeometry, branchMaterial);
+
+        const y = -0.5 + level * 0.15;
+        const angle = (level % 2 === 0) ? Math.PI / 6 : -Math.PI / 6;
+        branch.position.set(0, y, 0);
+        branch.rotation.z = angle;
+        branch.castShadow = true;
+        branch.visible = true; // Show all branches for test
+
+        branches.push(branch);
+        treeGroup.add(branch);
+      }
+
+      // Leaves
+      const leafGeometry = new THREE.PlaneGeometry(0.1, 0.15);
+      const leafMaterial1 = new THREE.MeshLambertMaterial({
+        color: 0x228B22,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.9
+      });
+      const leafMaterial2 = new THREE.MeshLambertMaterial({
+        color: 0x32CD32,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.9
+      });
+
+      for (let i = 0; i < 50; i++) {
+        const leaf = new THREE.Mesh(leafGeometry, Math.random() > 0.5 ? leafMaterial1 : leafMaterial2);
+        leaf.position.set(
+          (Math.random() - 0.5) * 2,
+          Math.random() * 1.5 - 0.5,
+          (Math.random() - 0.5) * 2
+        );
+        leaf.rotation.set(
+          Math.random() * Math.PI,
+          Math.random() * Math.PI,
+          Math.random() * Math.PI
+        );
+        leaf.castShadow = true;
+        leaf.visible = true; // Show all leaves for test
+
+        leaves.push(leaf);
+        treeGroup.add(leaf);
+      }
+    }
+
+    // Initialize
+    init();
+  </script>
+</body>
+</html>

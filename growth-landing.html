@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نمو ديناميكي - الجنينة</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            green: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            yellow: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+            },
+            red: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #2d2d2d;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    .dark {
+      --background: #1a1a1a;
+      --foreground: #faf9f7;
+      --glass-bg: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: 'Cairo', system-ui, sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .growth-branch {
+      transition: fill 1s ease-in-out, stroke 1s ease-in-out;
+      fill: #dbeafe; /* blue-100 */
+      stroke: #93c5fd; /* blue-300 */
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+    .growth-branch.filled {
+      fill: #3b82f6; /* blue-500 */
+      stroke: #1d4ed8; /* blue-700 */
+    }
+    .level-up {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.5s ease;
+    }
+    .level-up.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .liquid-fill {
+      animation: liquid 2s ease-in-out;
+    }
+    @keyframes liquid {
+      0% { transform: scaleY(0); }
+      100% { transform: scaleY(1); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="max-w-4xl mx-auto text-center">
+    <h1 class="font-serif text-4xl font-bold text-blue-800 dark:text-blue-100 mb-8">نمو ديناميكي</h1>
+    <p class="text-blue-600 dark:text-blue-400 mb-8">شجرة النمو تتطور مع إنجازاتك</p>
+
+    <div class="glass-card p-8 mb-8">
+      <div id="growth-tree" class="w-full max-w-md mx-auto" style="height: 600px;"></div>
+
+      <div class="mt-8">
+        <input type="range" id="completion-slider" min="0" max="100" value="0" class="w-full" oninput="updateGrowth(this.value)">
+        <p class="text-blue-600 mt-2">النسبة المئوية للإنجاز: <span id="percentage">0</span>%</p>
+      </div>
+    </div>
+
+    <div id="level-up" class="level-up glass-card p-6">
+      <h2 class="font-serif text-2xl font-bold text-blue-800 dark:text-blue-100 mb-4">مستوى جديد!</h2>
+      <p class="text-blue-600 dark:text-blue-400 mb-4">تهانينا! لقد أكملت 100% من المهام.</p>
+      <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
+        الانتقال إلى المنصة الخاصة
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let scene, camera, renderer, treeGroup;
+    let branches = [];
+    let leaves = [];
+
+    function initThreeJS() {
+      // Scene setup
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf8fafc); // Light background
+
+      // Camera setup
+      camera = new THREE.PerspectiveCamera(75, 400/600, 0.1, 1000);
+      camera.position.set(0, 0, 5);
+      camera.lookAt(0, 0, 0);
+
+      // Renderer setup
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(400, 600);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      // Add renderer to DOM
+      const container = document.getElementById('growth-tree');
+      container.appendChild(renderer.domElement);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(5, 5, 5);
+      directionalLight.castShadow = true;
+      directionalLight.shadow.mapSize.width = 2048;
+      directionalLight.shadow.mapSize.height = 2048;
+      scene.add(directionalLight);
+
+      // Create tree group
+      treeGroup = new THREE.Group();
+      scene.add(treeGroup);
+
+      // Create tree
+      createTree();
+
+      // Add orbit controls
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.enableZoom = true;
+      controls.enablePan = false;
+
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    function createTree() {
+      // Oak Tree trunk - thicker and more gnarled
+      const trunkGeometry = new THREE.CylinderGeometry(0.15, 0.25, 2.5, 12);
+      const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+      const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+      trunk.position.y = -1.25;
+      trunk.castShadow = true;
+      trunk.receiveShadow = true;
+      treeGroup.add(trunk);
+
+      // Add bark texture details (simulated with smaller cylinders)
+      for (let i = 0; i < 8; i++) {
+        const barkDetailGeometry = new THREE.CylinderGeometry(0.16, 0.17, 0.1, 8);
+        const barkDetailMaterial = new THREE.MeshLambertMaterial({ color: 0x654321 });
+        const barkDetail = new THREE.Mesh(barkDetailGeometry, barkDetailMaterial);
+        barkDetail.position.set(
+          (Math.random() - 0.5) * 0.1,
+          -0.8 + i * 0.3,
+          (Math.random() - 0.5) * 0.1
+        );
+        barkDetail.castShadow = true;
+        treeGroup.add(barkDetail);
+      }
+
+      // Roots - more extensive oak root system
+      for (let i = 0; i < 8; i++) {
+        const rootGeometry = new THREE.CylinderGeometry(0.03, 0.08, 0.4 + Math.random() * 0.3, 6);
+        const rootMaterial = new THREE.MeshLambertMaterial({ color: 0x654321 });
+        const root = new THREE.Mesh(rootGeometry, rootMaterial);
+        const angle = (i / 8) * Math.PI * 2;
+        const distance = 0.3 + Math.random() * 0.2;
+        root.position.set(Math.cos(angle) * distance, -1.6, Math.sin(angle) * distance);
+        root.rotation.z = angle + (Math.random() - 0.5) * 0.5;
+        root.rotation.x = (Math.random() - 0.5) * 0.3;
+        root.castShadow = true;
+        treeGroup.add(root);
+      }
+
+      // Oak branches - more complex branching structure
+      const branchLevels = 12;
+      for (let level = 0; level < branchLevels; level++) {
+        const thickness = Math.max(0.04, 0.08 - level * 0.005);
+        const length = Math.max(0.3, 1.2 - level * 0.08);
+        const branchGeometry = new THREE.CylinderGeometry(thickness * 0.7, thickness, length, 8);
+        const branchMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+        const branch = new THREE.Mesh(branchGeometry, branchMaterial);
+        
+        const y = -0.8 + level * 0.18;
+        const angle = (level % 3 === 0) ? Math.PI / 4 : (level % 3 === 1) ? -Math.PI / 4 : Math.PI / 8;
+        const xOffset = (level % 2 === 0) ? 0.1 : -0.1;
+        
+        branch.position.set(xOffset, y, 0);
+        branch.rotation.z = angle;
+        branch.rotation.x = (Math.random() - 0.5) * 0.2;
+        branch.castShadow = true;
+        branch.visible = false;
+        
+        branches.push(branch);
+        treeGroup.add(branch);
+      }
+
+      // Oak leaves - more realistic lobed oak leaf shapes
+      const leafGeometry = new THREE.PlaneGeometry(0.12, 0.18);
+      const leafMaterial1 = new THREE.MeshLambertMaterial({ 
+        color: 0x228B22, 
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.95
+      });
+      const leafMaterial2 = new THREE.MeshLambertMaterial({ 
+        color: 0x32CD32, 
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.95
+      });
+      const leafMaterial3 = new THREE.MeshLambertMaterial({ 
+        color: 0x006400, 
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.95
+      });
+
+      for (let i = 0; i < 80; i++) {
+        const leafMaterial = [leafMaterial1, leafMaterial2, leafMaterial3][Math.floor(Math.random() * 3)];
+        const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+        
+        // Position leaves in a more natural oak tree canopy
+        const radius = 0.5 + Math.random() * 1.5;
+        const angle = Math.random() * Math.PI * 2;
+        const height = Math.random() * 1.8 - 0.2;
+        
+        leaf.position.set(
+          Math.cos(angle) * radius,
+          height,
+          Math.sin(angle) * radius
+        );
+        
+        // Add some natural variation to leaf orientation
+        leaf.rotation.set(
+          Math.random() * Math.PI * 0.5 - Math.PI * 0.25,
+          Math.random() * Math.PI,
+          Math.random() * Math.PI * 0.3 - Math.PI * 0.15
+        );
+        
+        leaf.castShadow = true;
+        leaf.visible = false;
+        
+        leaves.push(leaf);
+        treeGroup.add(leaf);
+      }
+
+      // Add some acorns for extra realism
+      for (let i = 0; i < 15; i++) {
+        const acornGeometry = new THREE.CapsuleGeometry(0.02, 0.04, 4, 8);
+        const acornMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+        const acorn = new THREE.Mesh(acornGeometry, acornMaterial);
+        
+        const radius = 0.8 + Math.random() * 1.2;
+        const angle = Math.random() * Math.PI * 2;
+        
+        acorn.position.set(
+          Math.cos(angle) * radius,
+          Math.random() * 0.5 - 0.8,
+          Math.sin(angle) * radius
+        );
+        
+        acorn.rotation.set(
+          Math.random() * Math.PI,
+          Math.random() * Math.PI,
+          Math.random() * Math.PI
+        );
+        
+        acorn.castShadow = true;
+        acorn.visible = false;
+        
+        leaves.push(acorn); // Add to leaves array for growth animation
+        treeGroup.add(acorn);
+      }
+    }
+
+    function updateGrowth(percentage) {
+      document.getElementById('percentage').textContent = percentage;
+      const levelUp = document.getElementById('level-up');
+
+      // Update branches
+      const branchThreshold = 100 / branches.length;
+      branches.forEach((branch, index) => {
+        const threshold = (index + 1) * branchThreshold;
+        branch.visible = percentage >= threshold;
+        
+        if (branch.visible) {
+          // Add some animation
+          branch.scale.y = 1 + Math.sin(Date.now() * 0.001 + index) * 0.05;
+        }
+      });
+
+      // Update leaves
+      const leafThreshold = 100 / leaves.length;
+      leaves.forEach((leaf, index) => {
+        const threshold = (index + 1) * leafThreshold;
+        leaf.visible = percentage >= threshold;
+        
+        if (leaf.visible) {
+          // Gentle leaf movement
+          leaf.rotation.x += 0.005;
+          leaf.rotation.y += 0.003;
+        }
+      });
+
+      if (percentage == 100) {
+        levelUp.classList.add('show');
+      } else {
+        levelUp.classList.remove('show');
+      }
+    }
+
+    // Initialize Three.js when page loads
+    window.addEventListener('load', initThreeJS);
+
+    // Initialize
+    updateGrowth(0);
+  </script>
+</body>
+</html>
