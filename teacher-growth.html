@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>النمو - لوحة المعلم - الجنينة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #2d2d2d;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    .dark {
+      --background: #1a1a1a;
+      --foreground: #faf9f7;
+      --glass-bg: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-nav {
+      background: rgba(20, 20, 20, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    #tree-container {
+      width: 100%;
+      height: 500px;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+  <!-- Navigation -->
+  <nav class="glass-nav sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center gap-4">
+          <a href="dashboard.html" class="flex items-center gap-2 text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors">
+            <i class="fas fa-arrow-right"></i>
+            <span class="font-medium">العودة للوحة التحكم</span>
+          </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span class="font-serif text-xl font-bold text-blue-700 dark:text-blue-300">الجنينة</span>
+          <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card">
+            <i id="theme-icon" class="fas fa-moon text-blue-600"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl lg:text-4xl font-bold text-blue-800 dark:text-blue-100">النمو</h1>
+      <p class="text-blue-500 mt-2 text-lg">تتبع نموك التعليمي وإنجازاتك</p>
+    </div>
+
+    <!-- Growth Tree Visualization -->
+    <div class="glass-card p-8 mb-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100">شجرة النمو</h3>
+        <div class="flex items-center gap-4">
+          <div class="text-sm text-blue-500">
+            <span class="font-medium">المستوى الحالي:</span>
+            <span class="font-bold text-green-600">15</span>
+          </div>
+          <div class="text-sm text-blue-500">
+            <span class="font-medium">النقاط:</span>
+            <span class="font-bold text-blue-600">2,847</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="tree-container" class="glass-card"></div>
+
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-green-600">47</div>
+          <div class="text-sm text-blue-500">الدورات المكتملة</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-600">1,234</div>
+          <div class="text-sm text-blue-500">الطلاب المساعدين</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-purple-600">98%</div>
+          <div class="text-sm text-blue-500">رضا الطلاب</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievement Badges -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Recent Achievements -->
+      <div class="glass-card p-8">
+        <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-6">الإنجازات الأخيرة</h3>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-yellow-50 dark:bg-yellow-900/20">
+            <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+              <i class="fas fa-trophy w-6 h-6 text-yellow-600"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">معلم الشهر</h4>
+              <p class="text-sm text-blue-500">ديسمبر 2024 • +500 نقطة</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20">
+            <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+              <i class="fas fa-star w-6 h-6 text-blue-600"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">100 طالب مساعد</h4>
+              <p class="text-sm text-blue-500">15 ديسمبر 2024 • +200 نقطة</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-green-50 dark:bg-green-900/20">
+            <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+              <i class="fas fa-graduation-cap w-6 h-6 text-green-600"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">دورة مكتملة بنجاح</h4>
+              <p class="text-sm text-blue-500">10 دورات • +150 نقطة</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+              <i class="fas fa-heart w-6 h-6 text-purple-600"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">تقييم ممتاز</h4>
+              <p class="text-sm text-blue-500">متوسط 4.9 نجوم • +100 نقطة</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Growth Milestones -->
+      <div class="glass-card p-8">
+        <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-6">معالم النمو</h3>
+        <div class="space-y-6">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+              <i class="fas fa-check w-5 h-5 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">أول دورة تعليمية</h4>
+              <p class="text-sm text-blue-500">تم إنجازه في يناير 2024</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+              <i class="fas fa-check w-5 h-5 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">100 طالب مسجل</h4>
+              <p class="text-sm text-blue-500">تم إنجازه في مارس 2024</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+              <i class="fas fa-check w-5 h-5 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">أول 10,000 ريال إيراد</h4>
+              <p class="text-sm text-blue-500">تم إنجازه في يونيو 2024</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+              <i class="fas fa-clock w-5 h-5 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">معلم السنة</h4>
+              <p class="text-sm text-blue-500">الهدف: 50,000 نقطة إجمالية</p>
+            </div>
+            <div class="text-sm text-blue-500">2,847/50,000</div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+              <i class="fas fa-lock w-5 h-5 text-gray-600"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">مستوى 20</h4>
+              <p class="text-sm text-blue-500">الهدف: 5,000 نقطة</p>
+            </div>
+            <div class="text-sm text-blue-500">2,847/5,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Growth Statistics -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Monthly Growth -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+            <i class="fas fa-chart-line w-6 h-6 text-green-600"></i>
+          </div>
+          <span class="text-sm text-green-500 font-medium">نمو شهري</span>
+        </div>
+        <p class="text-2xl font-bold text-green-600 mb-2">+23%</p>
+        <p class="text-green-600 text-sm">مقارنة بالشهر الماضي</p>
+        <div class="mt-4 w-full h-2 bg-green-200 rounded-full">
+          <div class="w-4/5 h-full bg-green-500 rounded-full"></div>
+        </div>
+      </div>
+
+      <!-- Student Engagement -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-users w-6 h-6 text-blue-600"></i>
+          </div>
+          <span class="text-sm text-blue-500 font-medium">مشاركة الطلاب</span>
+        </div>
+        <p class="text-2xl font-bold text-blue-600 mb-2">94%</p>
+        <p class="text-blue-600 text-sm">متوسط إكمال الدورات</p>
+        <div class="mt-4 w-full h-2 bg-blue-200 rounded-full">
+          <div class="w-47/50 h-full bg-blue-500 rounded-full"></div>
+        </div>
+      </div>
+
+      <!-- Revenue Growth -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+            <i class="fas fa-dollar-sign w-6 h-6 text-purple-600"></i>
+          </div>
+          <span class="text-sm text-purple-500 font-medium">نمو الإيرادات</span>
+        </div>
+        <p class="text-2xl font-bold text-purple-600 mb-2">+18%</p>
+        <p class="text-purple-600 text-sm">مقارنة بالشهر الماضي</p>
+        <div class="mt-4 w-full h-2 bg-purple-200 rounded-full">
+          <div class="w-9/10 h-full bg-purple-500 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Goals -->
+    <div class="glass-card p-8">
+      <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-6">الأهداف القادمة</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+            <i class="fas fa-bullseye w-6 h-6 text-blue-600"></i>
+          </div>
+          <h4 class="font-bold text-blue-800 dark:text-blue-100 mb-2">إنشاء دورة جديدة</h4>
+          <p class="text-sm text-blue-500 mb-4">أنشئ دورة في مادة جديدة لتوسيع قاعدة الطلاب</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-blue-400">المكافأة: 300 نقطة</span>
+            <button class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-all">
+              ابدأ الآن
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-xl bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-700">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center mb-4">
+            <i class="fas fa-users w-6 h-6 text-green-600"></i>
+          </div>
+          <h4 class="font-bold text-blue-800 dark:text-blue-100 mb-2">وصول لـ 200 طالب</h4>
+          <p class="text-sm text-blue-500 mb-4">ساعد 200 طالب في رحلتهم التعليمية</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-blue-400">المكافأة: 500 نقطة</span>
+            <div class="w-20 h-2 bg-green-200 rounded-full">
+              <div class="w-3/5 h-full bg-green-500 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-700">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4">
+            <i class="fas fa-star w-6 h-6 text-purple-600"></i>
+          </div>
+          <h4 class="font-bold text-blue-800 dark:text-blue-100 mb-2">تقييم 5 نجوم</h4>
+          <p class="text-sm text-blue-500 mb-4">حافظ على متوسط تقييم 5 نجوم لمدة شهر</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-blue-400">المكافأة: 200 نقطة</span>
+            <div class="flex items-center gap-1">
+              <i class="fas fa-star w-4 h-4 text-yellow-400"></i>
+              <i class="fas fa-star w-4 h-4 text-yellow-400"></i>
+              <i class="fas fa-star w-4 h-4 text-yellow-400"></i>
+              <i class="fas fa-star w-4 h-4 text-yellow-400"></i>
+              <i class="fas fa-star w-4 h-4 text-yellow-400"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let scene, camera, renderer, tree, controls;
+
+    function initThreeJS() {
+      // Scene setup
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf0f8ff);
+
+      // Camera setup
+      camera = new THREE.PerspectiveCamera(75, document.getElementById('tree-container').clientWidth / 500, 0.1, 1000);
+      camera.position.set(0, 5, 10);
+
+      // Renderer setup
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(document.getElementById('tree-container').clientWidth, 500);
+      document.getElementById('tree-container').appendChild(renderer.domElement);
+
+      // Controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(10, 10, 5);
+      scene.add(directionalLight);
+
+      // Create tree
+      createTree();
+
+      // Animation loop
+      animate();
+    }
+
+    function createTree() {
+      tree = new THREE.Group();
+
+      // Trunk
+      const trunkGeometry = new THREE.CylinderGeometry(0.3, 0.5, 4, 8);
+      const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+      const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+      trunk.position.y = 2;
+      tree.add(trunk);
+
+      // Branches and leaves
+      createBranches(tree, 0, 4, 0, 3, 0);
+
+      scene.add(tree);
+    }
+
+    function createBranches(parent, x, y, z, level, angle) {
+      if (level <= 0) return;
+
+      const branchLength = level * 0.8;
+      const branchGeometry = new THREE.CylinderGeometry(0.1 * level, 0.15 * level, branchLength, 6);
+      const branchMaterial = new THREE.MeshLambertMaterial({ color: 0x654321 });
+      const branch = new THREE.Mesh(branchGeometry, branchMaterial);
+
+      branch.position.set(x, y, z);
+      branch.rotation.z = angle;
+      parent.add(branch);
+
+      // Leaves
+      if (level <= 2) {
+        const leavesGeometry = new THREE.SphereGeometry(0.8, 8, 6);
+        const leavesMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
+        const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+        leaves.position.set(x, y + branchLength/2, z);
+        parent.add(leaves);
+      }
+
+      // Recursive branches
+      const newY = y + branchLength * Math.cos(angle);
+      const newX = x + branchLength * Math.sin(angle);
+
+      createBranches(parent, newX, newY, z, level - 1, angle + 0.5);
+      createBranches(parent, newX, newY, z, level - 1, angle - 0.5);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+        scene.background = new THREE.Color(0xf0f8ff);
+      } else {
+        html.classList.add('dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+        scene.background = new THREE.Color(0x1a1a1a);
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener('load', initThreeJS);
+
+    // Load theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.getElementById('theme-icon').classList.remove('fa-moon');
+      document.getElementById('theme-icon').classList.add('fa-sun');
+    }
+  </script>
+</body>
+</html>

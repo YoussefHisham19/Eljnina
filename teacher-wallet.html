@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المحفظة - لوحة المعلم - الجنينة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #2d2d2d;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    .dark {
+      --background: #1a1a1a;
+      --foreground: #faf9f7;
+      --glass-bg: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-nav {
+      background: rgba(20, 20, 20, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+  <!-- Navigation -->
+  <nav class="glass-nav sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center gap-4">
+          <a href="dashboard.html" class="flex items-center gap-2 text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors">
+            <i class="fas fa-arrow-right"></i>
+            <span class="font-medium">العودة للوحة التحكم</span>
+          </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span class="font-serif text-xl font-bold text-blue-700 dark:text-blue-300">الجنينة</span>
+          <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card">
+            <i id="theme-icon" class="fas fa-moon text-blue-600"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl lg:text-4xl font-bold text-blue-800 dark:text-blue-100">المحفظة</h1>
+      <p class="text-blue-500 mt-2 text-lg">متابعة الإيرادات والمعاملات المالية</p>
+    </div>
+
+    <!-- Balance Overview -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Current Balance -->
+      <div class="glass-card p-8 border-2 border-green-400">
+        <div class="flex items-center justify-between mb-6">
+          <div class="w-16 h-16 rounded-2xl bg-green-500/20 flex items-center justify-center">
+            <i class="fas fa-wallet w-8 h-8 text-green-600"></i>
+          </div>
+          <span class="text-sm text-green-500 font-medium">الرصيد الحالي</span>
+        </div>
+        <p class="text-3xl font-bold text-green-700 dark:text-green-300 mb-2">13,878 ر.س</p>
+        <p class="text-green-600 text-sm">متاح للسحب</p>
+      </div>
+
+      <!-- This Month -->
+      <div class="glass-card p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-calendar-alt w-8 h-8 text-blue-600"></i>
+          </div>
+          <span class="text-sm text-blue-500 font-medium">هذا الشهر</span>
+        </div>
+        <p class="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-2">+2,450 ر.س</p>
+        <p class="text-blue-600 text-sm">زيادة 15%</p>
+      </div>
+
+      <!-- Pending -->
+      <div class="glass-card p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center">
+            <i class="fas fa-clock w-8 h-8 text-amber-600"></i>
+          </div>
+          <span class="text-sm text-amber-500 font-medium">معلق</span>
+        </div>
+        <p class="text-3xl font-bold text-amber-600 mb-2">890 ر.س</p>
+        <p class="text-amber-600 text-sm">سيتم إيداعه قريباً</p>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+      <button onclick="showWithdrawModal()" class="glass-card p-6 hover:scale-105 transition-all group">
+        <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center mb-4 group-hover:bg-green-500/30 transition-all">
+          <i class="fas fa-money-bill-wave w-6 h-6 text-green-600"></i>
+        </div>
+        <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100">سحب الأموال</h3>
+        <p class="text-blue-500 text-sm mt-1">طلب سحب الرصيد المتاح</p>
+      </button>
+
+      <button onclick="showTransferModal()" class="glass-card p-6 hover:scale-105 transition-all group">
+        <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4 group-hover:bg-blue-500/30 transition-all">
+          <i class="fas fa-exchange-alt w-6 h-6 text-blue-600"></i>
+        </div>
+        <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100">تحويل</h3>
+        <p class="text-blue-500 text-sm mt-1">تحويل الأموال لحساب بنكي</p>
+      </button>
+
+      <button onclick="showHistoryModal()" class="glass-card p-6 hover:scale-105 transition-all group">
+        <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4 group-hover:bg-purple-500/30 transition-all">
+          <i class="fas fa-history w-6 h-6 text-purple-600"></i>
+        </div>
+        <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100">سجل المعاملات</h3>
+        <p class="text-blue-500 text-sm mt-1">عرض جميع المعاملات</p>
+      </button>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="glass-card p-8 mb-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100">المعاملات الأخيرة</h3>
+        <button onclick="showHistoryModal()" class="text-blue-500 hover:text-blue-700 font-medium transition-colors">
+          عرض الكل
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+              <i class="fas fa-plus w-5 h-5 text-green-600"></i>
+            </div>
+            <div>
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">إيراد من دورة الرياضيات</h4>
+              <p class="text-sm text-blue-500">من الطالب: أحمد محمد • 15 ديسمبر 2024</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-green-600">+500 ر.س</p>
+            <p class="text-xs text-blue-400">مكتمل</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+              <i class="fas fa-plus w-5 h-5 text-green-600"></i>
+            </div>
+            <div>
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">إيراد من دورة الفيزياء</h4>
+              <p class="text-sm text-blue-500">من الطالب: فاطمة علي • 14 ديسمبر 2024</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-green-600">+400 ر.س</p>
+            <p class="text-xs text-blue-400">مكتمل</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+              <i class="fas fa-minus w-5 h-5 text-amber-600"></i>
+            </div>
+            <div>
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">رسوم المنصة (10%)</h4>
+              <p class="text-sm text-blue-500">خصم تلقائي • 14 ديسمبر 2024</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-amber-600">-90 ر.س</p>
+            <p class="text-xs text-blue-400">مكتمل</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+              <i class="fas fa-plus w-5 h-5 text-green-600"></i>
+            </div>
+            <div>
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">إيراد من دورة الكيمياء</h4>
+              <p class="text-sm text-blue-500">من الطالب: محمد حسن • 12 ديسمبر 2024</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-green-600">+250 ر.س</p>
+            <p class="text-xs text-blue-400">مكتمل</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+              <i class="fas fa-exchange-alt w-5 h-5 text-blue-600"></i>
+            </div>
+            <div>
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">سحب أموال</h4>
+              <p class="text-sm text-blue-500">إلى حساب البنك • 10 ديسمبر 2024</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-blue-600">-2,000 ر.س</p>
+            <p class="text-xs text-blue-400">مكتمل</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly Summary -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Earnings Chart -->
+      <div class="glass-card p-8">
+        <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-6">الإيرادات الشهرية</h3>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-600">يناير 2024</span>
+            <div class="flex items-center gap-2">
+              <div class="w-20 h-3 bg-blue-200 rounded-full">
+                <div class="w-3/4 h-full bg-blue-500 rounded-full"></div>
+              </div>
+              <span class="font-medium text-blue-800">7,500 ر.س</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-blue-600">فبراير 2024</span>
+            <div class="flex items-center gap-2">
+              <div class="w-20 h-3 bg-blue-200 rounded-full">
+                <div class="w-4/5 h-full bg-blue-500 rounded-full"></div>
+              </div>
+              <span class="font-medium text-blue-800">8,200 ر.س</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-blue-600">مارس 2024</span>
+            <div class="flex items-center gap-2">
+              <div class="w-20 h-3 bg-blue-200 rounded-full">
+                <div class="w-5/6 h-full bg-blue-500 rounded-full"></div>
+              </div>
+              <span class="font-medium text-blue-800">9,100 ر.س</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-blue-600">أبريل 2024</span>
+            <div class="flex items-center gap-2">
+              <div class="w-20 h-3 bg-blue-200 rounded-full">
+                <div class="w-2/3 h-full bg-blue-500 rounded-full"></div>
+              </div>
+              <span class="font-medium text-blue-800">6,800 ر.س</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-blue-600">مايو 2024</span>
+            <div class="flex items-center gap-2">
+              <div class="w-20 h-3 bg-blue-200 rounded-full">
+                <div class="w-4/5 h-full bg-blue-500 rounded-full"></div>
+              </div>
+              <span class="font-medium text-blue-800">8,500 ر.س</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-blue-600">ديسمبر 2024</span>
+            <div class="flex items-center gap-2">
+              <div class="w-20 h-3 bg-blue-200 rounded-full">
+                <div class="w-full h-full bg-green-500 rounded-full"></div>
+              </div>
+              <span class="font-medium text-green-600 font-bold">15,420 ر.س</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="glass-card p-8">
+        <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-6">طرق الدفع</h3>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                <i class="fas fa-credit-card w-5 h-5 text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-blue-800 dark:text-blue-100">البطاقة الائتمانية</h4>
+                <p class="text-sm text-blue-500">**** **** **** 1234</p>
+              </div>
+            </div>
+            <div class="text-green-500">
+              <i class="fas fa-check-circle w-5 h-5"></i>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                <i class="fas fa-university w-5 h-5 text-green-600"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-blue-800 dark:text-blue-100">الحساب البنكي</h4>
+                <p class="text-sm text-blue-500">SA1234567890123456789012</p>
+              </div>
+            </div>
+            <div class="text-green-500">
+              <i class="fas fa-check-circle w-5 h-5"></i>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                <i class="fas fa-mobile-alt w-5 h-5 text-purple-600"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-blue-800 dark:text-blue-100">المحفظة الرقمية</h4>
+                <p class="text-sm text-blue-500">STC Pay • 05xxxxxxxx</p>
+              </div>
+            </div>
+            <div class="text-green-500">
+              <i class="fas fa-check-circle w-5 h-5"></i>
+            </div>
+          </div>
+        </div>
+
+        <button class="w-full mt-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all">
+          <i class="fas fa-plus ml-2"></i>
+          إضافة طريقة دفع جديدة
+        </button>
+      </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="glass-card w-full max-w-md p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-blue-800 dark:text-blue-100">سحب الأموال</h3>
+            <button onclick="hideWithdrawModal()" class="text-blue-500 hover:text-blue-700">
+              <i class="fas fa-times w-6 h-6"></i>
+            </button>
+          </div>
+
+          <div class="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/30">
+            <p class="text-sm text-blue-600 dark:text-blue-400">الرصيد المتاح: <span class="font-bold">13,878 ر.س</span></p>
+            <p class="text-sm text-blue-500 mt-1">الحد الأدنى للسحب: 100 ر.س</p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); alert('تم إرسال طلب السحب بنجاح! سيتم المعالجة خلال 1-3 أيام عمل.'); hideWithdrawModal();" class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">المبلغ المراد سحبه</label>
+              <input type="number" required min="100" max="13878" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">طريقة الاستلام</label>
+              <select required class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+                <option value="bank">تحويل بنكي</option>
+                <option value="card">البطاقة الائتمانية</option>
+                <option value="wallet">المحفظة الرقمية</option>
+              </select>
+            </div>
+
+            <div class="flex gap-4">
+              <button type="submit" class="flex-1 py-4 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold transition-all">
+                <i class="fas fa-paper-plane ml-2"></i>
+                إرسال الطلب
+              </button>
+              <button type="button" onclick="hideWithdrawModal()" class="px-6 py-4 rounded-xl bg-gray-500 hover:bg-gray-600 text-white font-medium transition-all">
+                إلغاء
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div id="transferModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="glass-card w-full max-w-md p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-blue-800 dark:text-blue-100">تحويل الأموال</h3>
+            <button onclick="hideTransferModal()" class="text-blue-500 hover:text-blue-700">
+              <i class="fas fa-times w-6 h-6"></i>
+            </button>
+          </div>
+
+          <form onsubmit="event.preventDefault(); alert('تم إرسال طلب التحويل بنجاح!'); hideTransferModal();" class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">المبلغ</label>
+              <input type="number" required min="10" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">الحساب المستلم (IBAN)</label>
+              <input type="text" required class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all" placeholder="SA1234567890123456789012">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">اسم المستلم</label>
+              <input type="text" required class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+            </div>
+
+            <div class="flex gap-4">
+              <button type="submit" class="flex-1 py-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold transition-all">
+                <i class="fas fa-exchange-alt ml-2"></i>
+                تحويل
+              </button>
+              <button type="button" onclick="hideTransferModal()" class="px-6 py-4 rounded-xl bg-gray-500 hover:bg-gray-600 text-white font-medium transition-all">
+                إلغاء
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="glass-card w-full max-w-4xl p-8 max-h-screen overflow-y-auto">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-blue-800 dark:text-blue-100">سجل المعاملات</h3>
+            <button onclick="hideHistoryModal()" class="text-blue-500 hover:text-blue-700">
+              <i class="fas fa-times w-6 h-6"></i>
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <!-- More transaction history would go here -->
+            <div class="text-center py-8">
+              <p class="text-blue-500">يتم تحميل سجل المعاملات الكامل...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    function showWithdrawModal() {
+      document.getElementById('withdrawModal').classList.remove('hidden');
+    }
+
+    function hideWithdrawModal() {
+      document.getElementById('withdrawModal').classList.add('hidden');
+    }
+
+    function showTransferModal() {
+      document.getElementById('transferModal').classList.remove('hidden');
+    }
+
+    function hideTransferModal() {
+      document.getElementById('transferModal').classList.add('hidden');
+    }
+
+    function showHistoryModal() {
+      document.getElementById('historyModal').classList.remove('hidden');
+    }
+
+    function hideHistoryModal() {
+      document.getElementById('historyModal').classList.add('hidden');
+    }
+
+    // Load theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.getElementById('theme-icon').classList.remove('fa-moon');
+      document.getElementById('theme-icon').classList.add('fa-sun');
+    }
+  </script>
+</body>
+</html>

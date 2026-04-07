@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظرة عامة - لوحة المعلم - الجنينة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #2d2d2d;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    .dark {
+      --background: #1a1a1a;
+      --foreground: #faf9f7;
+      --glass-bg: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-nav {
+      background: rgba(20, 20, 20, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+  <!-- Navigation -->
+  <nav class="glass-nav sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center gap-4">
+          <a href="dashboard.html" class="flex items-center gap-2 text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors">
+            <i class="fas fa-arrow-right"></i>
+            <span class="font-medium">العودة للوحة التحكم</span>
+          </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span class="font-serif text-xl font-bold text-blue-700 dark:text-blue-300">الجنينة</span>
+          <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card">
+            <i id="theme-icon" class="fas fa-moon text-blue-600"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl lg:text-4xl font-bold text-blue-800 dark:text-blue-100">نظرة عامة</h1>
+      <p class="text-blue-500 mt-2 text-lg">مرحباً، أستاذ أحمد - إليك ملخص شامل لنشاطك</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Students -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-users w-6 h-6 text-blue-600"></i>
+          </div>
+          <span class="text-xs text-blue-400">+12 هذا الشهر</span>
+        </div>
+        <p class="text-sm text-blue-500">إجمالي الطلاب</p>
+        <p class="text-3xl font-bold text-blue-800 dark:text-blue-100">128</p>
+      </div>
+
+      <!-- Total Sales -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+            <i class="fas fa-dollar-sign w-6 h-6 text-green-600"></i>
+          </div>
+          <span class="text-xs text-green-500">+8% ↑</span>
+        </div>
+        <p class="text-sm text-blue-500">إجمالي المبيعات</p>
+        <p class="text-3xl font-bold text-blue-800 dark:text-blue-100">15,420 ر.س</p>
+      </div>
+
+      <!-- Platform Fee -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+            <i class="fas fa-chart-line w-6 h-6 text-amber-600"></i>
+          </div>
+          <span class="text-xs text-amber-400">10%</span>
+        </div>
+        <p class="text-sm text-amber-600">رسوم المنصة</p>
+        <p class="text-3xl font-bold text-amber-600">1,542 ر.س</p>
+      </div>
+
+      <!-- Net Balance -->
+      <div class="glass-card p-6 border-2 border-green-400">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+            <i class="fas fa-wallet w-6 h-6 text-green-600"></i>
+          </div>
+          <span class="text-xs text-green-400">× 0.9</span>
+        </div>
+        <p class="text-sm text-green-600">الرصيد الصافي</p>
+        <p class="text-3xl font-bold text-green-700 dark:text-green-300">13,878 ر.س</p>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Add Course Form -->
+      <div class="glass-card p-8">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-upload w-6 h-6 text-blue-600"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100">إضافة دورة جديدة</h3>
+            <p class="text-blue-500 text-sm">قم برفع دورة تعليمية جديدة</p>
+          </div>
+        </div>
+
+        <form onsubmit="event.preventDefault(); alert('تم رفع الدورة بنجاح!');" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">عنوان الدورة</label>
+            <input type="text" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all" placeholder="مثال: مقدمة في البرمجة">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">وصف الدورة</label>
+            <textarea rows="3" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all" placeholder="وصف تفصيلي للدورة..."></textarea>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">رابط الفيديو (Bunny.net)</label>
+            <input type="url" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all" placeholder="https://videos.bunny.net/...">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">السعر (بالريال السعودي)</label>
+            <input type="number" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all" placeholder="500">
+          </div>
+
+          <button type="submit" class="w-full py-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold transition-all transform hover:scale-105 shadow-lg">
+            <i class="fas fa-upload ml-2"></i>
+            رفع الدورة
+          </button>
+        </form>
+      </div>
+
+      <!-- Recent Courses -->
+      <div class="glass-card p-8">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+            <i class="fas fa-book w-6 h-6 text-green-600"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100">الدورات الحديثة</h3>
+            <p class="text-blue-500 text-sm">أحدث الدورات المرفوعة</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30 hover:bg-white/50 dark:hover:bg-blue-800/50 transition-all cursor-pointer">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                <i class="fas fa-graduation-cap w-5 h-5 text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-blue-800 dark:text-blue-100">مقدمة في الرياضيات</h4>
+                <p class="text-sm text-blue-500">45 طالب • 4.8 ★</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-green-600">4,500 ر.س</p>
+              <p class="text-xs text-blue-400">الإيرادات</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30 hover:bg-white/50 dark:hover:bg-blue-800/50 transition-all cursor-pointer">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                <i class="fas fa-atom w-5 h-5 text-green-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-blue-800 dark:text-blue-100">الفيزياء الأساسية</h4>
+                <p class="text-sm text-blue-500">38 طالب • 4.9 ★</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-green-600">3,800 ر.س</p>
+              <p class="text-xs text-blue-400">الإيرادات</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-blue-800/30 hover:bg-white/50 dark:hover:bg-blue-800/50 transition-all cursor-pointer">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                <i class="fas fa-flask w-5 h-5 text-purple-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-blue-800 dark:text-blue-100">الكيمياء العضوية</h4>
+                <p class="text-sm text-blue-500">25 طالب • 4.7 ★</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-green-600">2,500 ر.س</p>
+              <p class="text-xs text-blue-400">الإيرادات</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-6 border-t border-blue-200 dark:border-blue-700">
+          <a href="teacher-courses.html" class="w-full py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all text-center block">
+            عرض جميع الدورات
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-8">
+      <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-6">إجراءات سريعة</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a href="teacher-courses.html" class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4 group-hover:bg-blue-500/30 transition-all">
+            <i class="fas fa-plus w-6 h-6 text-blue-600"></i>
+          </div>
+          <h4 class="font-semibold text-blue-800 dark:text-blue-100">إضافة دورة</h4>
+          <p class="text-sm text-blue-500 mt-1">رفع دورة جديدة</p>
+        </a>
+
+        <a href="teacher-quizzes.html" class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center mb-4 group-hover:bg-green-500/30 transition-all">
+            <i class="fas fa-question-circle w-6 h-6 text-green-600"></i>
+          </div>
+          <h4 class="font-semibold text-blue-800 dark:text-blue-100">إدارة الاختبارات</h4>
+          <p class="text-sm text-blue-500 mt-1">إنشاء وتعديل الاختبارات</p>
+        </a>
+
+        <a href="teacher-wallet.html" class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center mb-4 group-hover:bg-amber-500/30 transition-all">
+            <i class="fas fa-wallet w-6 h-6 text-amber-600"></i>
+          </div>
+          <h4 class="font-semibold text-blue-800 dark:text-blue-100">المحفظة</h4>
+          <p class="text-sm text-blue-500 mt-1">متابعة الإيرادات</p>
+        </a>
+
+        <a href="teacher-growth.html" class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4 group-hover:bg-purple-500/30 transition-all">
+            <i class="fas fa-tree w-6 h-6 text-purple-600"></i>
+          </div>
+          <h4 class="font-semibold text-blue-800 dark:text-blue-100">النمو</h4>
+          <p class="text-sm text-blue-500 mt-1">تتبع التقدم</p>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Load theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.getElementById('theme-icon').classList.remove('fa-moon');
+      document.getElementById('theme-icon').classList.add('fa-sun');
+    }
+  </script>
+</body>
+</html>

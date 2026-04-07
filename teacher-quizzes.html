@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الاختبارات - لوحة المعلم - الجنينة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #2d2d2d;
+      --glass-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    .dark {
+      --background: #1a1a1a;
+      --foreground: #faf9f7;
+      --glass-bg: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-nav {
+      background: rgba(20, 20, 20, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+  <!-- Navigation -->
+  <nav class="glass-nav sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center gap-4">
+          <a href="dashboard.html" class="flex items-center gap-2 text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors">
+            <i class="fas fa-arrow-right"></i>
+            <span class="font-medium">العودة للوحة التحكم</span>
+          </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span class="font-serif text-xl font-bold text-blue-700 dark:text-blue-300">الجنينة</span>
+          <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card">
+            <i id="theme-icon" class="fas fa-moon text-blue-600"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl lg:text-4xl font-bold text-blue-800 dark:text-blue-100">الاختبارات</h1>
+        <p class="text-blue-500 mt-2 text-lg">إنشاء وإدارة الاختبارات والتقييمات</p>
+      </div>
+      <button onclick="showCreateQuizModal()" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-all transform hover:scale-105 shadow-lg">
+        <i class="fas fa-plus ml-2"></i>
+        إنشاء اختبار جديد
+      </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
+      <div class="glass-card p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-question-circle w-6 h-6 text-blue-600"></i>
+          </div>
+          <div>
+            <p class="text-sm text-blue-500">إجمالي الاختبارات</p>
+            <p class="text-2xl font-bold text-blue-800 dark:text-blue-100">24</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+            <i class="fas fa-users w-6 h-6 text-green-600"></i>
+          </div>
+          <div>
+            <p class="text-sm text-green-600">الطلاب المختبرين</p>
+            <p class="text-2xl font-bold text-green-700 dark:text-green-300">89</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+            <i class="fas fa-chart-line w-6 h-6 text-amber-600"></i>
+          </div>
+          <div>
+            <p class="text-sm text-amber-600">متوسط الدرجات</p>
+            <p class="text-2xl font-bold text-amber-600">82%</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+            <i class="fas fa-clock w-6 h-6 text-purple-600"></i>
+          </div>
+          <div>
+            <p class="text-sm text-purple-600">الاختبارات النشطة</p>
+            <p class="text-2xl font-bold text-purple-600">8</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quizzes Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Quiz Card 1 -->
+      <div class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-brain w-6 h-6 text-blue-600"></i>
+          </div>
+          <div class="text-right">
+            <div class="bg-green-500 text-white px-2 py-1 rounded-lg text-xs font-medium">
+              نشط
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 group-hover:text-blue-600 transition-colors">اختبار الرياضيات الأساسية</h3>
+          <p class="text-blue-500 text-sm">مقدمة في الرياضيات - الوحدة الأولى</p>
+
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-blue-600">عدد الأسئلة:</span>
+              <span class="font-medium">15</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">المدة:</span>
+              <span class="font-medium">30 دقيقة</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">أكمل:</span>
+              <span class="font-medium text-green-600">32/45 طالب</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button class="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-edit ml-1"></i>
+              تعديل
+            </button>
+            <button class="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-chart-bar ml-1"></i>
+              النتائج
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Card 2 -->
+      <div class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+            <i class="fas fa-atom w-6 h-6 text-green-600"></i>
+          </div>
+          <div class="text-right">
+            <div class="bg-green-500 text-white px-2 py-1 rounded-lg text-xs font-medium">
+              نشط
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 group-hover:text-blue-600 transition-colors">اختبار الفيزياء - القوى</h3>
+          <p class="text-blue-500 text-sm">قوانين نيوتن والحركة</p>
+
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-blue-600">عدد الأسئلة:</span>
+              <span class="font-medium">20</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">المدة:</span>
+              <span class="font-medium">45 دقيقة</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">أكمل:</span>
+              <span class="font-medium text-green-600">28/38 طالب</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button class="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-edit ml-1"></i>
+              تعديل
+            </button>
+            <button class="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-chart-bar ml-1"></i>
+              النتائج
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Card 3 -->
+      <div class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+            <i class="fas fa-flask w-6 h-6 text-purple-600"></i>
+          </div>
+          <div class="text-right">
+            <div class="bg-yellow-500 text-white px-2 py-1 rounded-lg text-xs font-medium">
+              قيد المراجعة
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 group-hover:text-blue-600 transition-colors">اختبار الكيمياء العضوية</h3>
+          <p class="text-blue-500 text-sm">المركبات العضوية وتفاعلاتها</p>
+
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-blue-600">عدد الأسئلة:</span>
+              <span class="font-medium">25</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">المدة:</span>
+              <span class="font-medium">60 دقيقة</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">أكمل:</span>
+              <span class="font-medium text-gray-500">0/25 طالب</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button class="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-edit ml-1"></i>
+              تعديل
+            </button>
+            <button class="flex-1 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-eye ml-1"></i>
+              معاينة
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Card 4 -->
+      <div class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
+            <i class="fas fa-language w-6 h-6 text-red-600"></i>
+          </div>
+          <div class="text-right">
+            <div class="bg-green-500 text-white px-2 py-1 rounded-lg text-xs font-medium">
+              نشط
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 group-hover:text-blue-600 transition-colors">اختبار الإنجليزية - المستوى المتوسط</h3>
+          <p class="text-blue-500 text-sm">قواعد اللغة ومفردات</p>
+
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-blue-600">عدد الأسئلة:</span>
+              <span class="font-medium">30</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">المدة:</span>
+              <span class="font-medium">40 دقيقة</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">أكمل:</span>
+              <span class="font-medium text-green-600">45/67 طالب</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button class="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-edit ml-1"></i>
+              تعديل
+            </button>
+            <button class="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-chart-bar ml-1"></i>
+              النتائج
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Card 5 -->
+      <div class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+            <i class="fas fa-calculator w-6 h-6 text-indigo-600"></i>
+          </div>
+          <div class="text-right">
+            <div class="bg-green-500 text-white px-2 py-1 rounded-lg text-xs font-medium">
+              نشط
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 group-hover:text-blue-600 transition-colors">اختبار الإحصاء</h3>
+          <p class="text-blue-500 text-sm">المتوسطات والانحراف المعياري</p>
+
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-blue-600">عدد الأسئلة:</span>
+              <span class="font-medium">18</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">المدة:</span>
+              <span class="font-medium">35 دقيقة</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">أكمل:</span>
+              <span class="font-medium text-green-600">25/31 طالب</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button class="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-edit ml-1"></i>
+              تعديل
+            </button>
+            <button class="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-chart-bar ml-1"></i>
+              النتائج
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Card 6 -->
+      <div class="glass-card p-6 hover:scale-105 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-teal-500/20 flex items-center justify-center">
+            <i class="fas fa-code w-6 h-6 text-teal-600"></i>
+          </div>
+          <div class="text-right">
+            <div class="bg-red-500 text-white px-2 py-1 rounded-lg text-xs font-medium">
+              منتهي
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 group-hover:text-blue-600 transition-colors">اختبار البرمجة - JavaScript</h3>
+          <p class="text-blue-500 text-sm">أساسيات البرمجة والمتغيرات</p>
+
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-blue-600">عدد الأسئلة:</span>
+              <span class="font-medium">22</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">المدة:</span>
+              <span class="font-medium">50 دقيقة</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-600">أكمل:</span>
+              <span class="font-medium text-green-600">18/18 طالب</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button class="flex-1 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-eye ml-1"></i>
+              عرض
+            </button>
+            <button class="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition-all">
+              <i class="fas fa-chart-bar ml-1"></i>
+              النتائج
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Quiz Modal -->
+    <div id="createQuizModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="glass-card w-full max-w-2xl p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-blue-800 dark:text-blue-100">إنشاء اختبار جديد</h3>
+            <button onclick="hideCreateQuizModal()" class="text-blue-500 hover:text-blue-700">
+              <i class="fas fa-times w-6 h-6"></i>
+            </button>
+          </div>
+
+          <form onsubmit="event.preventDefault(); alert('تم إنشاء الاختبار بنجاح!'); hideCreateQuizModal();" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">عنوان الاختبار</label>
+                <input type="text" required class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">الدورة المرتبطة</label>
+                <select required class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+                  <option>مقدمة في الرياضيات</option>
+                  <option>الفيزياء الأساسية</option>
+                  <option>الكيمياء العضوية</option>
+                  <option>تعلم الإنجليزية</option>
+                  <option>أساسيات البرمجة</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">عدد الأسئلة</label>
+                <input type="number" required min="5" max="50" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">المدة (بالدقائق)</label>
+                <input type="number" required min="10" max="180" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">تاريخ الانتهاء</label>
+                <input type="datetime-local" required class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">تعليمات الاختبار</label>
+              <textarea rows="3" class="w-full px-4 py-3 rounded-xl border border-blue-200 dark:border-blue-700 bg-white/50 dark:bg-blue-800/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all" placeholder="تعليمات خاصة بالاختبار..."></textarea>
+            </div>
+
+            <div class="flex gap-4">
+              <button type="submit" class="flex-1 py-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold transition-all">
+                <i class="fas fa-plus ml-2"></i>
+                إنشاء الاختبار
+              </button>
+              <button type="button" onclick="hideCreateQuizModal()" class="px-6 py-4 rounded-xl bg-gray-500 hover:bg-gray-600 text-white font-medium transition-all">
+                إلغاء
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    function showCreateQuizModal() {
+      document.getElementById('createQuizModal').classList.remove('hidden');
+    }
+
+    function hideCreateQuizModal() {
+      document.getElementById('createQuizModal').classList.add('hidden');
+    }
+
+    // Load theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.getElementById('theme-icon').classList.remove('fa-moon');
+      document.getElementById('theme-icon').classList.add('fa-sun');
+    }
+  </script>
+</body>
+</html>

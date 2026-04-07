@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>لوحة التحكم - الجنينة</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -110,34 +109,34 @@
       <nav class="flex-1 p-4">
         <ul class="space-y-2">
           <li>
-            <button onclick="setTab('overview')" id="tab-overview" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-yellow-500 text-white shadow-lg border-2 border-yellow-400">
+            <a href="teacher-overview.html" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-yellow-500 text-white shadow-lg border-2 border-yellow-400">
               <i class="fas fa-chart-pie w-5 h-5"></i>
               <span class="font-medium">نظرة عامة</span>
-            </button>
+            </a>
           </li>
           <li>
-            <button onclick="setTab('courses')" id="tab-courses" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
+            <a href="teacher-courses.html" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
               <i class="fas fa-book w-5 h-5"></i>
               <span class="font-medium">دوراتي</span>
-            </button>
+            </a>
           </li>
           <li>
-            <button onclick="setTab('quizzes')" id="tab-quizzes" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
+            <a href="teacher-quizzes.html" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
               <i class="fas fa-question-circle w-5 h-5"></i>
               <span class="font-medium">الاختبارات</span>
-            </button>
+            </a>
           </li>
           <li>
-            <button onclick="setTab('wallet')" id="tab-wallet" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
+            <a href="teacher-wallet.html" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
               <i class="fas fa-wallet w-5 h-5"></i>
               <span class="font-medium">المحفظة</span>
-            </button>
+            </a>
           </li>
           <li>
-            <button onclick="setTab('growth')" id="tab-growth" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
+            <a href="teacher-growth.html" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800">
               <i class="fas fa-tree w-5 h-5"></i>
               <span class="font-medium">النمو</span>
-            </button>
+            </a>
           </li>
         </ul>
       </nav>
@@ -153,101 +152,138 @@
 
     <!-- Main Content -->
     <main class="flex-1 p-4 lg:p-8">
-      <!-- Overview Tab Content -->
-      <div id="content-overview">
-        <!-- Header -->
-        <div class="mb-8">
-          <h2 class="text-2xl lg:text-3xl font-bold text-blue-800 dark:text-blue-100">مرحباً، أستاذ أحمد</h2>
-          <p class="text-blue-500 mt-1">إليك ملخص نشاطك اليوم</p>
-        </div>
+      <!-- Welcome Header -->
+      <div class="mb-8">
+        <h2 class="text-2xl lg:text-3xl font-bold text-blue-800 dark:text-blue-100">مرحباً بك في لوحة المعلم</h2>
+        <p class="text-blue-500 mt-1">اختر القسم الذي تريد العمل عليه</p>
+      </div>
 
-      <!-- Stats Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <!-- Total Students -->
+      <!-- Quick Access Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Overview -->
+        <a href="teacher-overview.html" class="glass-card p-6 hover:scale-105 transition-all group">
+          <div class="w-16 h-16 rounded-2xl bg-yellow-500/20 flex items-center justify-center mb-4 group-hover:bg-yellow-500/30 transition-all">
+            <i class="fas fa-chart-pie w-8 h-8 text-yellow-600"></i>
+          </div>
+          <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">نظرة عامة</h3>
+          <p class="text-blue-500 text-sm">إحصائيات شاملة وملخص الأداء</p>
+          <div class="mt-4 flex items-center text-yellow-600">
+            <span class="text-sm font-medium">الدخول الآن</span>
+            <i class="fas fa-arrow-left mr-2"></i>
+          </div>
+        </a>
+
+        <!-- Courses -->
+        <a href="teacher-courses.html" class="glass-card p-6 hover:scale-105 transition-all group">
+          <div class="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center mb-4 group-hover:bg-blue-500/30 transition-all">
+            <i class="fas fa-book w-8 h-8 text-blue-600"></i>
+          </div>
+          <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">إدارة الدورات</h3>
+          <p class="text-blue-500 text-sm">إنشاء وتعديل وإدارة دوراتك التعليمية</p>
+          <div class="mt-4 flex items-center text-blue-600">
+            <span class="text-sm font-medium">الدخول الآن</span>
+            <i class="fas fa-arrow-left mr-2"></i>
+          </div>
+        </a>
+
+        <!-- Quizzes -->
+        <a href="teacher-quizzes.html" class="glass-card p-6 hover:scale-105 transition-all group">
+          <div class="w-16 h-16 rounded-2xl bg-purple-500/20 flex items-center justify-center mb-4 group-hover:bg-purple-500/30 transition-all">
+            <i class="fas fa-question-circle w-8 h-8 text-purple-600"></i>
+          </div>
+          <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">الاختبارات</h3>
+          <p class="text-blue-500 text-sm">إنشاء وإدارة الاختبارات والتقييمات</p>
+          <div class="mt-4 flex items-center text-purple-600">
+            <span class="text-sm font-medium">الدخول الآن</span>
+            <i class="fas fa-arrow-left mr-2"></i>
+          </div>
+        </a>
+
+        <!-- Wallet -->
+        <a href="teacher-wallet.html" class="glass-card p-6 hover:scale-105 transition-all group">
+          <div class="w-16 h-16 rounded-2xl bg-green-500/20 flex items-center justify-center mb-4 group-hover:bg-green-500/30 transition-all">
+            <i class="fas fa-wallet w-8 h-8 text-green-600"></i>
+          </div>
+          <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">المحفظة</h3>
+          <p class="text-blue-500 text-sm">متابعة الإيرادات والمعاملات المالية</p>
+          <div class="mt-4 flex items-center text-green-600">
+            <span class="text-sm font-medium">الدخول الآن</span>
+            <i class="fas fa-arrow-left mr-2"></i>
+          </div>
+        </a>
+
+        <!-- Growth -->
+        <a href="teacher-growth.html" class="glass-card p-6 hover:scale-105 transition-all group">
+          <div class="w-16 h-16 rounded-2xl bg-indigo-500/20 flex items-center justify-center mb-4 group-hover:bg-indigo-500/30 transition-all">
+            <i class="fas fa-tree w-8 h-8 text-indigo-600"></i>
+          </div>
+          <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">النمو</h3>
+          <p class="text-blue-500 text-sm">تتبع نموك التعليمي وإنجازاتك</p>
+          <div class="mt-4 flex items-center text-indigo-600">
+            <span class="text-sm font-medium">الدخول الآن</span>
+            <i class="fas fa-arrow-left mr-2"></i>
+          </div>
+        </a>
+
+        <!-- Quick Stats -->
         <div class="glass-card p-6">
-          <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
-              <i class="fas fa-users w-6 h-6 text-blue-600"></i>
-            </div>
-            <span class="text-xs text-blue-400">+12 هذا الشهر</span>
+          <div class="w-16 h-16 rounded-2xl bg-red-500/20 flex items-center justify-center mb-4">
+            <i class="fas fa-tachometer-alt w-8 h-8 text-red-600"></i>
           </div>
-          <p class="text-sm text-blue-500">إجمالي الطلاب</p>
-          <p class="text-2xl font-bold text-blue-800 dark:text-blue-100">128</p>
-        </div>
-
-        <!-- Total Sales -->
-        <div class="glass-card p-6">
-          <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
-              <i class="fas fa-dollar-sign w-6 h-6 text-green-600"></i>
+          <h3 class="text-xl font-bold text-blue-800 dark:text-blue-100 mb-2">إحصائيات سريعة</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-blue-500">إجمالي الطلاب:</span>
+              <span class="font-bold text-blue-700">128</span>
             </div>
-            <span class="text-xs text-green-500">+8% ↑</span>
-          </div>
-          <p class="text-sm text-blue-500">إجمالي المبيعات</p>
-          <p class="text-2xl font-bold text-blue-800 dark:text-blue-100">15,420 ر.س</p>
-        </div>
-
-        <!-- Platform Fee -->
-        <div class="glass-card p-6">
-          <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
-              <i class="fas fa-chart-line w-6 h-6 text-amber-600"></i>
+            <div class="flex justify-between">
+              <span class="text-blue-500">الدورات النشطة:</span>
+              <span class="font-bold text-blue-700">12</span>
             </div>
-            <span class="text-xs text-sage-400">10%</span>
-          </div>
-          <p class="text-sm text-sage-500">رسوم المنصة (10%)</p>
-          <p class="text-2xl font-bold text-amber-600">1,542 ر.س</p>
-        </div>
-
-        <!-- Net Balance -->
-        <div class="glass-card p-6 border-2 border-sage-400">
-          <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl bg-sage-500/20 flex items-center justify-center">
-              <i class="fas fa-wallet w-6 h-6 text-sage-600"></i>
+            <div class="flex justify-between">
+              <span class="text-blue-500">الرصيد الحالي:</span>
+              <span class="font-bold text-green-600">13,878 ر.س</span>
             </div>
-            <span class="text-xs text-sage-400">× 0.9</span>
           </div>
-          <p class="text-sm text-sage-500">الرصيد الصافي</p>
-          <p class="text-2xl font-bold text-sage-700 dark:text-sage-300">13,878 ر.س</p>
         </div>
       </div>
 
-      <!-- Content Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Add Course Form -->
-        <div class="glass-card p-6">
-          <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <i class="fas fa-upload w-5 h-5 text-blue-600"></i>
+      <!-- Recent Activity -->
+      <div class="glass-card p-6">
+        <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 mb-6">النشاط الأخير</h3>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+              <i class="fas fa-plus w-5 h-5 text-green-600"></i>
             </div>
-            <h3 class="text-lg font-bold text-sage-800 dark:text-sage-100">إضافة دورة جديدة</h3>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">تم إضافة دورة جديدة</h4>
+              <p class="text-sm text-blue-500">دورة "مقدمة في الرياضيات" • منذ 2 ساعات</p>
+            </div>
           </div>
 
-          <form onsubmit="event.preventDefault(); alert('تم رفع الدورة بنجاح!');" class="space-y-4">
-            <div>
-              <label class="block text-sm text-sage-600 dark:text-sage-400 mb-2">عنوان الدورة</label>
-              <input type="text" class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-sage-700 bg-white/50 dark:bg-sage-800/50 focus:outline-none focus:ring-2 focus:ring-sage-400" placeholder="مثال: مقدمة في البرمجة">
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+              <i class="fas fa-user-plus w-5 h-5 text-blue-600"></i>
             </div>
-
-            <div>
-              <label class="block text-sm text-sage-600 dark:text-sage-400 mb-2">رابط الفيديو (Bunny.net)</label>
-              <input type="url" class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-sage-700 bg-white/50 dark:bg-sage-800/50 focus:outline-none focus:ring-2 focus:ring-sage-400" placeholder="https://videos.bunny.net/...">
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">طالب جديد انضم لدورتك</h4>
+              <p class="text-sm text-blue-500">أحمد محمد • منذ 4 ساعات</p>
             </div>
+          </div>
 
-            <button type="submit" class="w-full py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all">
-              رفع
-            </button>
-          </form>
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-white/30 dark:bg-blue-800/30">
+            <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+              <i class="fas fa-star w-5 h-5 text-purple-600"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-blue-800 dark:text-blue-100">تقييم ممتاز</h4>
+              <p class="text-sm text-blue-500">5 نجوم من الطالبة فاطمة • منذ يوم واحد</p>
+            </div>
+          </div>
         </div>
-
-        <!-- Recent Courses -->
-        <div class="glass-card p-6">
-          <h3 class="text-lg font-bold text-sage-800 dark:text-sage-100 mb-6">الدورات الحديثة</h3>
-
-          <div class="space-y-4">
-            <div class="flex items-center justify-between p-4 rounded-xl bg-white/30 dark:bg-sage-800/30">
-              <div>
-                <h4 class="font-medium text-sage-800 dark:text-sage-100">مقدمة في الرياضيات</h4>
+      </div>
+    </main>
                 <p class="text-sm text-sage-500">45 طالب</p>
               </div>
               <div class="text-right">
@@ -280,28 +316,6 @@
           </div>
       </div>
 
-      <!-- Growth Tab Content -->
-      <div id="content-growth" class="hidden">
-        <div class="glass-card p-6 mb-6">
-          <h3 class="text-lg font-bold text-blue-800 dark:text-blue-100 mb-4">نمو ديناميكي</h3>
-          <p class="text-blue-600 dark:text-blue-400 mb-4">شجرة النمو تتطور مع إنجازاتك</p>
-          <div class="text-center mb-4">
-            <p class="text-sm text-blue-500">عدد الطلاب: <span class="font-bold text-blue-700">128</span></p>
-          </div>
-          <div id="growth-tree-dashboard" class="w-full max-w-sm mx-auto" style="height: 400px;"></div>
-          <div class="mt-4">
-            <input type="range" id="completion-slider-dashboard" min="0" max="100" value="0" class="w-full" oninput="updateGrowthDashboard(this.value)">
-            <p class="text-blue-600 mt-2">النسبة المئوية للإنجاز: <span id="percentage-dashboard">0</span>%</p>
-          </div>
-        </div>
-        <div id="level-up-dashboard" class="level-up glass-card p-6 hidden">
-          <h2 class="font-serif text-2xl font-bold text-blue-800 dark:text-blue-100 mb-4">مستوى جديد!</h2>
-          <p class="text-blue-600 dark:text-blue-400 mb-4">تهانينا! لقد أكملت 100% من المهام.</p>
-          <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
-            الانتقال إلى المنصة الخاصة
-          </button>
-        </div>
-      </div>
     </main>
   </div>
 
@@ -309,34 +323,34 @@
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 glass-nav border-t border-sage-200 dark:border-sage-800 z-50">
     <ul class="flex justify-around p-2">
       <li>
-        <button onclick="setTab('overview')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-600">
+        <a href="teacher-overview.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-600">
           <i class="fas fa-chart-pie w-5 h-5"></i>
           <span class="text-xs">نظرة عامة</span>
-        </button>
+        </a>
       </li>
       <li>
-        <button onclick="setTab('courses')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
+        <a href="teacher-courses.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
           <i class="fas fa-book w-5 h-5"></i>
           <span class="text-xs">دوراتي</span>
-        </button>
+        </a>
       </li>
       <li>
-        <button onclick="setTab('quizzes')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
+        <a href="teacher-quizzes.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
           <i class="fas fa-question-circle w-5 h-5"></i>
           <span class="text-xs">اختبارات</span>
-        </button>
+        </a>
       </li>
       <li>
-        <button onclick="setTab('wallet')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
+        <a href="teacher-wallet.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
           <i class="fas fa-wallet w-5 h-5"></i>
           <span class="text-xs">المحفظة</span>
-        </button>
+        </a>
       </li>
       <li>
-        <button onclick="setTab('growth')" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
+        <a href="teacher-growth.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-sage-400">
           <i class="fas fa-tree w-5 h-5"></i>
           <span class="text-xs">النمو</span>
-        </button>
+        </a>
       </li>
     </ul>
   </nav>
