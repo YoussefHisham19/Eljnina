@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -129,24 +129,24 @@
   </style>
 </head>
 <body>
-  <!-- Navbar -->
+  
   <nav class="fixed top-0 left-0 right-0 z-50 glass-nav">
     <div class="section-padding">
       <div class="flex items-center justify-between h-16 lg:h-20">
-        <!-- Logo -->
+   
         <a href="index.html" class="flex items-center gap-2">
           <span class="text-2xl font-serif font-bold text-blue-600 dark:text-blue-300">الجنينة</span>
           <span class="hidden sm:block text-sm text-blue-500 dark:text-blue-400">The Garden</span>
         </a>
 
-        <!-- Desktop Navigation -->
+    
         <div class="hidden md:flex items-center gap-8">
           <a href="#hero" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">الرئيسية</a>
           <a href="#steps" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">خطوات النمو</a>
           <a href="dashboard.html" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">لوحة التحكم</a>
         </div>
 
-        <!-- Actions -->
+     
         <div class="flex items-center gap-3">
           <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors" aria-label="Toggle theme">
             <i id="theme-icon" class="fas fa-moon w-5 h-5 text-blue-600"></i>
@@ -160,7 +160,6 @@
         </div>
       </div>
 
-      <!-- Mobile Menu -->
       <div id="mobile-menu" class="hidden md:hidden py-4 border-t border-blue-200 dark:border-blue-700">
         <div class="flex flex-col gap-4">
           <a href="#hero" class="text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white transition-colors">الرئيسية</a>
@@ -171,63 +170,62 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-    <!-- Background Elements -->
+  
     <div class="absolute inset-0 overflow-hidden">
       <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl animate-float"></div>
       <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-green-300/20 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
       <div class="absolute top-1/2 left-1/2 w-48 h-48 bg-yellow-300/20 rounded-full blur-2xl animate-float" style="animation-delay: 4s;"></div>
     </div>
 
-    <!-- Content -->
+   
     <div class="relative z-10 section-padding text-center max-w-5xl mx-auto">
-      <!-- Badge -->
+      
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8">
         <i class="fas fa-leaf w-4 h-4 text-blue-600 dark:text-blue-400"></i>
         <span id="hero-badge" class="text-sm text-blue-600 dark:text-blue-400">منصة التعليم الذكي</span>
       </div>
 
-      <!-- Headline -->
+      
       <h1 id="hero-headline" class="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-blue-800 dark:text-blue-100 mb-6 leading-tight">
         ابدأ زراعة غصنك التعليمي الآن
       </h1>
 
-      <!-- Subheadline -->
+      
       <p id="hero-subheadline" class="text-lg sm:text-xl text-blue-600 dark:text-blue-400 mb-10 max-w-2xl mx-auto leading-relaxed">
         منصة الجنينة تمنحك المساحة الخاصة لتنمية معرفتك وزراعة مستقبلك
       </p>
 
-      <!-- CTA Buttons -->
+      
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a href="#steps" id="cta-primary" class="btn-primary w-full sm:w-auto text-center">ابدأ رحلتك</a>
         <a href="#steps" id="cta-secondary" class="btn-secondary w-full sm:w-auto text-center">اعرف المزيد</a>
       </div>
 
-      <!-- Scroll Indicator -->
+      
       <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <i class="fas fa-arrow-down w-6 h-6 text-yellow-400"></i>
       </div>
     </div>
   </section>
 
-  <!-- Steps Section -->
+
   <section id="steps" class="py-24 relative">
     <div class="section-padding">
-      <!-- Section Header -->
+    
       <div class="text-center mb-16">
         <h2 id="steps-title" class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-blue-800 dark:text-blue-100 mb-4">خطوات النمو</h2>
         <p id="steps-subtitle" class="text-blue-600 dark:text-blue-400 max-w-xl mx-auto">رحلتك نحو النجاح التعليمي تبدأ من هنا</p>
       </div>
 
-      <!-- Steps Container -->
+      
       <div class="relative max-w-6xl mx-auto">
-        <!-- Connection Line -->
+      
         <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-green-400 to-yellow-400 dark:from-blue-600 dark:via-green-600 dark:to-yellow-600 transform -translate-y-1/2 rounded-full"></div>
 
-        <!-- Cards Grid -->
+        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          <!-- Garden -->
+          
           <div class="relative group">
             <div class="glass-card p-6 h-full transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-xl">
               <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">1</div>
@@ -247,7 +245,6 @@
             </div>
           </div>
 
-          <!-- Tree -->
           <div class="relative group">
             <div class="glass-card p-6 h-full transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-xl">
               <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">2</div>
@@ -267,7 +264,7 @@
             </div>
           </div>
 
-          <!-- Branch -->
+       
           <div class="relative group">
             <div class="glass-card p-6 h-full transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-xl">
               <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">3</div>
@@ -287,7 +284,7 @@
             </div>
           </div>
 
-          <!-- Leaf -->
+          
           <div class="relative group">
             <div class="glass-card p-6 h-full transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-xl">
               <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">4</div>
@@ -306,14 +303,14 @@
         </div>
       </div>
 
-      <!-- CTA -->
+  
       <div class="text-center mt-16">
         <a href="dashboard.html" id="join-cta" class="btn-primary inline-flex items-center gap-2">انضم إلى الجنينة الآن</a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
+ 
   <footer class="py-8 border-t border-blue-200 dark:border-blue-800">
     <div class="section-padding text-center">
       <p id="footer-text" class="text-blue-500 dark:text-blue-400 text-sm">© 2024 الجنينة - The Garden. جميع الحقوق محفوظة</p>
@@ -338,57 +335,195 @@
       }
     }
 
-    // Language toggle
-    let currentLang = 'ar';
-    const translations = {
-      ar: {
-        heroBadge: 'منصة التعليم الذكي',
-        heroHeadline: 'ابدأ زراعة غصنك التعليمي الآن',
-        heroSubheadline: 'منصة الجنينة تمنحك المساحة الخاصة لتنمية معرفتك وزراعة مستقبلك',
-        ctaPrimary: 'ابدأ رحلتك',
-        ctaSecondary: 'اعرف المزيد',
-        stepsTitle: 'خطوات النمو',
-        stepsSubtitle: 'رحلتك نحو النجاح التعليمي تبدأ من هنا',
-        joinCta: 'انضم إلى الجنينة الآن',
-        footerText: '© 2024 الجنينة - The Garden. جميع الحقوق محفوظة'
-      },
-      en: {
-        heroBadge: 'Smart Education Platform',
-        heroHeadline: 'Start Growing Your Educational Branch Today',
-        heroSubheadline: 'The Garden platform gives you the private space to nurture your knowledge and grow your future',
-        ctaPrimary: 'Start Your Journey',
-        ctaSecondary: 'Learn More',
-        stepsTitle: 'Growth Steps',
-        stepsSubtitle: 'Your journey towards educational success starts here',
-        joinCta: 'Join The Garden Now',
-        footerText: '© 2024 The Garden. All rights reserved'
-      }
+    // Comprehensive Translation System
+    const translationDictionary = {
+      // Navigation
+      "الجنينة": "The Garden",
+      "The Garden": "الجنينة",
+      "الرئيسية": "Home",
+      "Home": "الرئيسية",
+      "خطوات النمو": "Growth Steps",
+      "Growth Steps": "خطوات النمو",
+      "لوحة التحكم": "Dashboard",
+      "Dashboard": "لوحة التحكم",
+
+      // Hero Section
+      "منصة التعليم الذكي": "Smart Education Platform",
+      "Smart Education Platform": "منصة التعليم الذكي",
+      "ابدأ زراعة غصنك التعليمي الآن": "Start Growing Your Educational Branch Today",
+      "Start Growing Your Educational Branch Today": "ابدأ زراعة غصنك التعليمي الآن",
+      "منصة الجنينة تمنحك المساحة الخاصة لتنمية معرفتك وزراعة مستقبلك": "The Garden platform gives you the private space to nurture your knowledge and grow your future",
+      "The Garden platform gives you the private space to nurture your knowledge and grow your future": "منصة الجنينة تمنحك المساحة الخاصة لتنمية معرفتك وزراعة مستقبلك",
+      "ابدأ رحلتك": "Start Your Journey",
+      "Start Your Journey": "ابدأ رحلتك",
+      "اعرف المزيد": "Learn More",
+      "Learn More": "اعرف المزيد",
+
+      // Steps Section
+      "خطوات النمو": "Growth Steps",
+      "Growth Steps": "خطوات النمو",
+      "رحلتك نحو النجاح التعليمي تبدأ من هنا": "Your journey towards educational success starts here",
+      "Your journey towards educational success starts here": "رحلتك نحو النجاح التعليمي تبدأ من هنا",
+      "التسجيل": "Registration",
+      "Registration": "التسجيل",
+      "ابدأ رحلتك التعليمية بالتسجيل في منصة الجنينة": "Start your educational journey by registering on The Garden platform",
+      "Start your educational journey by registering on The Garden platform": "ابدأ رحلتك التعليمية بالتسجيل في منصة الجنينة",
+      "الاختيار": "Selection",
+      "Selection": "الاختيار",
+      "اختر المسار التعليمي الذي يناسب احتياجاتك": "Choose the educational path that suits your needs",
+      "Choose the educational path that suits your needs": "اختر المسار التعليمي الذي يناسب احتياجاتك",
+      "النمو": "Growth",
+      "Growth": "النمو",
+      "تابع نموك التعليمي من خلال الدروس والاختبارات": "Track your educational growth through lessons and tests",
+      "Track your educational growth through lessons and tests": "تابع نموك التعليمي من خلال الدروس والاختبارات",
+      "التخرج": "Graduation",
+      "Graduation": "التخرج",
+      "احتفل بإنجازاتك وشاركها مع الآخرين": "Celebrate your achievements and share them with others",
+      "Celebrate your achievements and share them with others": "احتفل بإنجازاتك وشاركها مع الآخرين",
+
+      // Features
+      "دروس خاصة": "Private Lessons",
+      "Private Lessons": "دروس خاصة",
+      "اختبارات تفاعلية": "Interactive Tests",
+      "Interactive Tests": "اختبارات تفاعلية",
+      "تتبع التقدم": "Progress Tracking",
+      "Progress Tracking": "تتبع التقدم",
+
+      // CTA
+      "انضم إلى الجنينة الآن": "Join The Garden Now",
+      "Join The Garden Now": "انضم إلى الجنينة الآن",
+
+      // Footer
+      "© 2024 الجنينة - The Garden. جميع الحقوق محفوظة": "© 2024 The Garden. All rights reserved",
+      "© 2024 The Garden. All rights reserved": "© 2024 الجنينة - The Garden. جميع الحقوق محفوظة"
     };
 
-    function toggleLanguage() {
-      currentLang = currentLang === 'ar' ? 'en' : 'ar';
-      const html = document.documentElement;
+    function translatePage() {
+      const currentLang = localStorage.getItem('language') || 'ar';
+      const newLang = currentLang === 'ar' ? 'en' : 'ar';
       
-      if (currentLang === 'en') {
-        html.setAttribute('dir', 'ltr');
-        html.setAttribute('lang', 'en');
-      } else {
-        html.setAttribute('dir', 'rtl');
-        html.setAttribute('lang', 'ar');
+      // Update HTML attributes
+      const html = document.documentElement;
+      html.setAttribute('lang', newLang);
+      html.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+      
+      // Update page title
+      document.title = newLang === 'ar' ? 'الجنينة - منصة التعليم الذكي' : 'The Garden - Smart Education Platform';
+      
+      // Translate all text nodes and elements
+      translateAllText(newLang);
+      
+      // Save language preference
+      localStorage.setItem('language', newLang);
+      
+      // Show confirmation
+      alert(newLang === 'ar' ? 'تم الترجمة إلى العربية' : 'Translated to English');
+    }
+
+    function translateAllText(targetLang) {
+      // Get all text nodes
+      const walker = document.createTreeWalker(
+        document.body,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+      );
+
+      const textNodes = [];
+      let node;
+      while (node = walker.nextNode()) {
+        if (node.textContent.trim() && !isExcludedElement(node.parentElement)) {
+          textNodes.push(node);
+        }
+      }
+
+      // Translate each text node
+      textNodes.forEach(textNode => {
+        const originalText = textNode.textContent.trim();
+        const translatedText = translateText(originalText, targetLang);
+        if (translatedText !== originalText) {
+          textNode.textContent = translatedText;
+        }
+      });
+
+      // Translate specific elements with IDs
+      const elementsWithIds = document.querySelectorAll('[id]');
+      elementsWithIds.forEach(element => {
+        if (element.textContent && !isExcludedElement(element)) {
+          const originalText = element.textContent.trim();
+          const translatedText = translateText(originalText, targetLang);
+          if (translatedText !== originalText) {
+            element.textContent = translatedText;
+          }
+        }
+      });
+
+      // Translate placeholder attributes
+      const inputs = document.querySelectorAll('input[placeholder], textarea[placeholder]');
+      inputs.forEach(input => {
+        const placeholder = input.getAttribute('placeholder');
+        if (placeholder) {
+          const translated = translateText(placeholder, targetLang);
+          if (translated !== placeholder) {
+            input.setAttribute('placeholder', translated);
+          }
+        }
+      });
+
+      // Translate title attributes
+      const elementsWithTitle = document.querySelectorAll('[title]');
+      elementsWithTitle.forEach(element => {
+        const title = element.getAttribute('title');
+        if (title) {
+          const translated = translateText(title, targetLang);
+          if (translated !== title) {
+            element.setAttribute('title', translated);
+          }
+        }
+      });
+    }
+
+    function translateText(text, targetLang) {
+      if (!text || text.length === 0) return text;
+      
+      // Check if text exists in dictionary
+      if (translationDictionary[text]) {
+        return translationDictionary[text];
       }
       
-      // Update text content
-      document.getElementById('hero-badge').textContent = translations[currentLang].heroBadge;
-      document.getElementById('hero-headline').textContent = translations[currentLang].heroHeadline;
-      document.getElementById('hero-subheadline').textContent = translations[currentLang].heroSubheadline;
-      document.getElementById('cta-primary').textContent = translations[currentLang].ctaPrimary;
-      document.getElementById('cta-secondary').textContent = translations[currentLang].ctaSecondary;
-      document.getElementById('steps-title').textContent = translations[currentLang].stepsTitle;
-      document.getElementById('steps-subtitle').textContent = translations[currentLang].stepsSubtitle;
-      document.getElementById('join-cta').textContent = translations[currentLang].joinCta;
-      document.getElementById('footer-text').textContent = translations[currentLang].footerText;
+      // For longer texts, try to translate word by word
+      const words = text.split(/\s+/);
+      const translatedWords = words.map(word => {
+        // Remove punctuation for lookup
+        const cleanWord = word.replace(/[.,!?;:]$/, '');
+        const punctuation = word.slice(cleanWord.length);
+        
+        if (translationDictionary[cleanWord]) {
+          return translationDictionary[cleanWord] + punctuation;
+        }
+        return word;
+      });
       
-      localStorage.setItem('language', currentLang);
+      return translatedWords.join(' ');
+    }
+
+    function isExcludedElement(element) {
+      if (!element) return true;
+      
+      // Exclude elements that shouldn't be translated
+      const excludedTags = ['SCRIPT', 'STYLE', 'LINK', 'META', 'NOSCRIPT'];
+      const excludedClasses = ['fa', 'fas', 'far', 'fab', 'font-awesome'];
+      
+      if (excludedTags.includes(element.tagName)) return true;
+      if (element.classList && excludedClasses.some(cls => element.classList.contains(cls))) return true;
+      if (element.closest('script, style, link, meta, noscript')) return true;
+      
+      return false;
+    }
+
+    // Legacy toggleLanguage function for backward compatibility
+    function toggleLanguage() {
+      translatePage();
     }
 
     // Mobile menu toggle
@@ -421,6 +556,311 @@
         toggleLanguage();
       }
     });
+  </script>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الجنينة - منصة التعليم الذكي</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e', // أخضر الجنينة
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+            },
+            ocean: {
+              500: '#3b82f6', // أزرق هادئ
+              600: '#2563eb',
+              900: '#1e3a8a',
+            }
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --text-color: #0f172a;
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.4);
+    }
+    
+    .dark {
+      --bg-color: #0f172a;
+      --text-color: #f8fafc;
+      --glass-bg: rgba(30, 41, 59, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.05);
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Cairo', sans-serif;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    /* تأثير الزجاج المحسن */
+    .glass-effect {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    /* الأزرار العصرية */
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e 0%, #059669 100%);
+      color: white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px -10px rgba(34, 197, 94, 0.5);
+    }
+
+    .btn-outline {
+      border: 2px solid #cbd5e1;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .dark .btn-outline {
+      border-color: #334155;
+    }
+
+    .btn-outline:hover {
+      border-color: #22c55e;
+      color: #22c55e;
+    }
+
+    /* الحركات (Animations) */
+    .blob {
+      position: absolute;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.6;
+      animation: float 8s infinite alternate ease-in-out;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(20px, -20px) scale(1.05); }
+    }
+
+    /* بطاقات الخطوات */
+    .step-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .step-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1);
+    }
+    .dark .step-card:hover {
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-brand-500 selection:text-white">
+
+  <nav class="fixed w-full z-50 glass-effect transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        
+        <a href="#" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
+            <i class="fas fa-leaf text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight text-ocean-900 dark:text-white">الجنينة</h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">التعليم الذكي</p>
+          </div>
+        </a>
+
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#hero" class="text-sm font-semibold hover:text-brand-600 transition-colors">الرئيسية</a>
+          <a href="#steps" class="text-sm font-semibold hover:text-brand-600 transition-colors">كيف نعمل؟</a>
+          <a href="#" class="text-sm font-semibold hover:text-brand-600 transition-colors">المميزات</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button onclick="toggleTheme()" class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+            <i id="theme-icon" class="fas fa-moon text-slate-700 dark:text-slate-300"></i>
+          </button>
+          
+          <a href="#" class="hidden md:flex btn-primary px-6 py-2.5 rounded-full text-sm font-bold shadow-md">
+            تسجيل الدخول
+          </a>
+
+          <button onclick="toggleMenu()" class="md:hidden w-10 h-10 rounded-lg flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            <i id="menu-icon" class="fas fa-bars"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-700 glass-effect">
+      <div class="px-4 pt-2 pb-6 space-y-3 text-center">
+        <a href="#hero" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">الرئيسية</a>
+        <a href="#steps" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">كيف نعمل؟</a>
+        <a href="#" class="block w-full text-center mt-4 btn-primary px-6 py-3 rounded-xl font-bold">تسجيل الدخول</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <div class="blob w-[500px] h-[500px] bg-brand-500/20 rounded-full top-0 right-[-100px]"></div>
+    <div class="blob w-[400px] h-[400px] bg-ocean-500/20 rounded-full bottom-0 left-[-50px]" style="animation-delay: -4s;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect border border-brand-200 dark:border-brand-900 mb-8 mx-auto">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-600"></span>
+        </span>
+        <span class="text-sm font-semibold text-brand-700 dark:text-brand-400">النسخة الجديدة 2.0 متاحة الآن</span>
+      </div>
+
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.2]">
+        ابدأ زراعة <span class="text-transparent bg-clip-text bg-gradient-to-l from-brand-500 to-ocean-500">غصنك التعليمي</span> الآن
+      </h1>
+      
+      <p class="mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+        منصة الجنينة تمنحك المساحة الخاصة لتنمية معرفتك، إدارة طلابك، وزراعة مستقبلك التعليمي بكل سهولة واحترافية.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#steps" class="btn-primary px-8 py-4 rounded-xl text-lg font-bold w-full sm:w-auto flex items-center justify-center gap-2">
+          ابدأ رحلتك مجاناً <i class="fas fa-arrow-left text-sm"></i>
+        </a>
+        <a href="#steps" class="btn-outline px-8 py-4 rounded-xl text-lg font-bold w-full sm:w-auto">
+          استكشف المنصة
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="steps" class="py-24 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center mb-20">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">هيكلة <span class="text-brand-500">الجنينة</span></h2>
+        <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">نظام هرمي متكامل يبدأ من الإدارة العامة وصولاً إلى الطالب.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <div class="step-card glass-effect p-8 rounded-3xl relative overflow-hidden group border border-slate-200 dark:border-slate-700">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-ocean-500/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150"></div>
+          <div class="w-14 h-14 rounded-2xl bg-ocean-100 dark:bg-ocean-900/50 flex items-center justify-center mb-6 text-ocean-600 dark:text-ocean-400 shadow-sm relative z-10">
+            <i class="fas fa-globe text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 relative z-10">1. الجنينة</h3>
+          <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 relative z-10">لوحة التحكم المركزية لإدارة المنصة بالكامل، الإشراف على المراكز، واستخراج التقارير الشاملة.</p>
+        </div>
+
+        <div class="step-card glass-effect p-8 rounded-3xl relative overflow-hidden group border border-slate-200 dark:border-slate-700">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150"></div>
+          <div class="w-14 h-14 rounded-2xl bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center mb-6 text-brand-600 dark:text-brand-400 shadow-sm relative z-10">
+            <i class="fas fa-tree text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 relative z-10">2. الشجرة</h3>
+          <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 relative z-10">مساحة مخصصة لكل مركز تعليمي لإدارة فروعه، تنظيم شؤون المعلمين، ومتابعة المبيعات.</p>
+        </div>
+
+        <div class="step-card glass-effect p-8 rounded-3xl relative overflow-hidden group border border-slate-200 dark:border-slate-700">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150"></div>
+          <div class="w-14 h-14 rounded-2xl bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400 shadow-sm relative z-10">
+            <i class="fas fa-code-branch text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 relative z-10">3. الغصن</h3>
+          <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 relative z-10">لوحة تحكم مستقلة لكل معلم لرفع الدورات، إدارة تفاعلات الطلاب، وتتبع الأرباح الخاصة به.</p>
+        </div>
+
+        <div class="step-card glass-effect p-8 rounded-3xl relative overflow-hidden group border border-slate-200 dark:border-slate-700">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150"></div>
+          <div class="w-14 h-14 rounded-2xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400 shadow-sm relative z-10">
+            <i class="fas fa-leaf text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 relative z-10">4. الورقة</h3>
+          <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 relative z-10">الواجهة النهائية للطالب عبر رابط مخصص للحصول على الدروس، الاختبارات التفاعلية، وتتبع تقدمه.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-8 border-t border-slate-200 dark:border-slate-800 glass-effect relative z-10">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">
+        © 2024 الجنينة. صُنع بحب من أجل بيئة تعليمية أفضل.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // التحكم في الوضع الليلي/النهاري
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      
+      html.classList.toggle('dark');
+      
+      if (html.classList.contains('dark')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    // التحقق من الوضع المحفوظ مسبقاً عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun');
+      }
+    });
+
+    // التحكم في قائمة الهاتف المحمول
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('menu-icon');
+      
+      menu.classList.toggle('hidden');
+      
+      if (menu.classList.contains('hidden')) {
+        icon.classList.replace('fa-times', 'fa-bars');
+      } else {
+        icon.classList.replace('fa-bars', 'fa-times');
+      }
+    }
   </script>
 </body>
 </html>
