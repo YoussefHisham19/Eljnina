@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="main-html">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - الجنينة</title>
+  <script>
+    (function() {
+      if (localStorage.getItem('user_theme') === 'dark') document.documentElement.classList.add('dark');
+    })();
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Cairo', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] } } } }
+  </script>
+  <style>
+    :root { --bg:#0f172a; --fg:#f1f5f9; --glass:rgba(15,23,42,0.7); --glass-border:rgba(255,255,255,0.08); }
+    body { background-color:var(--bg); color:var(--fg); font-family:'Cairo',sans-serif; min-height:100vh; }
+    .glass-card { background:var(--glass); backdrop-filter:blur(24px); border:1px solid var(--glass-border); border-radius:1.25rem; box-shadow:0 8px 40px rgba(0,0,0,0.3); }
+    .stat-card { background:var(--glass); backdrop-filter:blur(24px); border:1px solid var(--glass-border); border-radius:1rem; padding:1.5rem; }
+    .btn-primary { background:linear-gradient(135deg,#3b82f6 0%,#10b981 100%); color:white; padding:0.7rem 1.4rem; border-radius:0.75rem; font-weight:600; font-family:'Cairo',sans-serif; border:none; cursor:pointer; transition:all 0.3s; }
+    .btn-primary:hover { transform:translateY(-2px); }
+    .input-field { width:100%; padding:0.7rem 1rem; border-radius:0.75rem; border:2px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:var(--fg); font-family:'Cairo',sans-serif; font-size:0.95rem; outline:none; transition:all 0.3s; box-sizing:border-box; }
+    .input-field:focus { border-color:#3b82f6; }
+    .progress-bar { height:10px; border-radius:99px; background:rgba(255,255,255,0.08); overflow:hidden; }
+    .progress-fill { height:100%; border-radius:99px; transition:width 1s ease; }
+    .animate-float { animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+    #login-screen { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:999; }
+  </style>
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-green-500/10 rounded-full blur-3xl animate-float" style="animation-delay:2s"></div>
+  </div>
+
+  <!-- ═══ LOGIN SCREEN ═══ -->
+  <div id="login-screen">
+    <div class="glass-card p-10 w-full max-w-sm mx-4 text-center">
+      <i class="fas fa-shield-alt text-blue-400 text-4xl mb-4"></i>
+      <h2 class="font-serif text-2xl font-bold text-blue-100 mb-6">Admin Access</h2>
+      <input type="password" id="admin-password" class="input-field mb-4 text-center" placeholder="كلمة المرور" dir="ltr">
+      <div id="login-error" class="text-red-400 text-sm mb-3 hidden">كلمة المرور غلط</div>
+      <button onclick="adminLogin()" class="btn-primary w-full">دخول</button>
+    </div>
+  </div>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="admin-dashboard" class="hidden">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 px-6 py-3 flex items-center justify-between" style="background:rgba(15,23,42,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06)">
+      <div class="flex items-center gap-3">
+        <span class="font-serif text-xl font-bold text-blue-300">الجنينة</span>
+        <span class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded">Admin</span>
+      </div>
+      <button onclick="loadData()" class="text-sm text-blue-400 hover:text-blue-200 transition-colors">
+        <i class="fas fa-sync-alt ml-1"></i>تحديث
+      </button>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="stat-card">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+              <i class="fas fa-chalkboard-teacher text-blue-400"></i>
+            </div>
+            <span class="text-sm text-slate-400">المدرسين</span>
+          </div>
+          <p class="text-3xl font-bold text-blue-100" id="kpi-teachers">—</p>
+          <div class="mt-2 progress-bar"><div class="progress-fill bg-blue-500" id="bar-teachers" style="width:0%"></div></div>
+          <p class="text-xs text-slate-500 mt-1" id="cap-teachers">من 500</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
+              <i class="fas fa-user-graduate text-green-400"></i>
+            </div>
+            <span class="text-sm text-slate-400">الطلاب</span>
+          </div>
+          <p class="text-3xl font-bold text-blue-100" id="kpi-students">—</p>
+          <div class="mt-2 progress-bar"><div class="progress-fill bg-green-500" id="bar-students" style="width:0%"></div></div>
+          <p class="text-xs text-slate-500 mt-1" id="cap-students">من 50,000</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+              <i class="fas fa-book text-yellow-400"></i>
+            </div>
+            <span class="text-sm text-slate-400">الحصص</span>
+          </div>
+          <p class="text-3xl font-bold text-blue-100" id="kpi-lessons">—</p>
+          <p class="text-xs text-slate-500 mt-1">إجمالي الحصص</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
+              <i class="fas fa-money-bill-wave text-purple-400"></i>
+            </div>
+            <span class="text-sm text-slate-400">الإيراد المتوقع</span>
+          </div>
+          <p class="text-3xl font-bold text-blue-100" id="kpi-revenue">—</p>
+          <p class="text-xs text-slate-500 mt-1">200 ج × مدرسين دفعوا</p>
+        </div>
+      </div>
+
+      <!-- Capacity vs Target -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+        <!-- Supabase Capacity -->
+        <div class="glass-card p-6">
+          <h3 class="font-bold text-blue-100 mb-5 flex items-center gap-2">
+            <i class="fas fa-server text-blue-400"></i> سعة Supabase Free
+          </h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-slate-400">المدرسين</span>
+                <span class="text-blue-300" id="cap-display-teachers">0 / 500</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill bg-blue-500" id="cap-bar-teachers" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-slate-400">الطلاب</span>
+                <span class="text-green-300" id="cap-display-students">0 / 50,000</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill bg-green-500" id="cap-bar-students" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-slate-400">Database</span>
+                <span class="text-yellow-300">~0 MB / 500 MB</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill bg-yellow-500" style="width:1%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue Scenarios -->
+        <div class="glass-card p-6">
+          <h3 class="font-bold text-blue-100 mb-5 flex items-center gap-2">
+            <i class="fas fa-chart-line text-green-400"></i> سيناريوهات الإيراد
+          </h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(59,130,246,0.08)">
+              <div>
+                <p class="text-sm font-medium text-blue-200">10 مدرسين</p>
+                <p class="text-xs text-slate-500">مرحلة البداية</p>
+              </div>
+              <span class="text-blue-300 font-bold">2,000 ج</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(59,130,246,0.08)">
+              <div>
+                <p class="text-sm font-medium text-blue-200">25 مدرساً</p>
+                <p class="text-xs text-slate-500">مرحلة النمو</p>
+              </div>
+              <span class="text-blue-300 font-bold">5,000 ج</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-xl border border-green-500/30" style="background:rgba(16,185,129,0.08)">
+              <div>
+                <p class="text-sm font-bold text-green-300">50 مدرساً ✅</p>
+                <p class="text-xs text-green-500">الهدف المطلوب</p>
+              </div>
+              <span class="text-green-300 font-bold text-lg">10,000 ج</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Teachers Table -->
+      <div class="glass-card overflow-hidden">
+        <div class="p-5 border-b border-white/5">
+          <h3 class="font-bold text-blue-100 flex items-center gap-2">
+            <i class="fas fa-chalkboard-teacher text-blue-400"></i> المدرسون المسجلون
+          </h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-white/5">
+                <th class="text-right p-4 text-slate-400 font-medium">الاسم</th>
+                <th class="text-right p-4 text-slate-400 font-medium">البريد</th>
+                <th class="text-right p-4 text-slate-400 font-medium">عدد الحصص</th>
+                <th class="text-right p-4 text-slate-400 font-medium">عدد الطلاب</th>
+                <th class="text-right p-4 text-slate-400 font-medium">تاريخ التسجيل</th>
+              </tr>
+            </thead>
+            <tbody id="teachers-table">
+              <tr><td colspan="5" class="text-center p-8 text-slate-500">جارٍ التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── CONFIG ────────────────────────────────────────────────
+    const SUPABASE_URL  = 'https://fpvtcgafpgdvuwtwxunm.supabase.co'
+    const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwdnRjZ2FmcGdkdnV3dHd4dW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzU0NjgsImV4cCI6MjA5MTM1MTQ2OH0.kJl1KcHmfEGByHQqojYJzAbhmTuo90qnxtDpeKIRNU0' // ← ضع الـ anon key هنا
+    const ADMIN_PASS    = 'eljnina_admin_2025'  // ← غير كلمة المرور دي
+    const TEACHER_LIMIT = 500
+    const STUDENT_LIMIT = 50000
+
+    const { createClient } = supabase
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    // ── LOGIN ─────────────────────────────────────────────────
+    function adminLogin() {
+      const pass = document.getElementById('admin-password').value
+      if (pass === ADMIN_PASS) {
+        document.getElementById('login-screen').style.display = 'none'
+        document.getElementById('admin-dashboard').classList.remove('hidden')
+        loadData()
+      } else {
+        document.getElementById('login-error').classList.remove('hidden')
+      }
+    }
+  
+/*
+const { data: { session } } = await sb.auth.getSession()
+
+if (!session) {
+  window.location.href = 'auth.html'
+}
+
+const { data: profile } = await sb
+  .from('profiles')
+  .select('role')
+  .eq('id', session.user.id)
+  .maybeSingle()
+
+if (profile.role !== 'admin') {
+  window.location.href = 'index.html'
+}
+*/
+
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') adminLogin()
+    })
+
+    // ── LOAD DATA ─────────────────────────────────────────────
+    async function loadData() {
+      const [{ data: teachers }, { data: students }, { data: lessons }, { data: tokens }] = await Promise.all([
+        sb.from('profiles').select('*').eq('role', 'teacher'),
+        sb.from('profiles').select('id').eq('role', 'student'),
+        sb.from('lessons').select('id, teacher_id'),
+        sb.from('student_tokens').select('student_id, lesson_id, payment_status')
+      ])
+
+      const teacherCount = teachers?.length || 0
+      const studentCount = students?.length || 0
+      const lessonCount  = lessons?.length || 0
+      const paidTeachers = 0 // Will implement when subscription added — for now show 0
+
+      // KPIs
+      document.getElementById('kpi-teachers').textContent = teacherCount
+      document.getElementById('kpi-students').textContent = studentCount
+      document.getElementById('kpi-lessons').textContent  = lessonCount
+      document.getElementById('kpi-revenue').textContent  = (paidTeachers * 200).toLocaleString() + ' ج'
+
+      // Capacity bars
+      const tPct = Math.min(100, (teacherCount / TEACHER_LIMIT) * 100)
+      const sPct = Math.min(100, (studentCount / STUDENT_LIMIT) * 100)
+      document.getElementById('bar-teachers').style.width = tPct + '%'
+      document.getElementById('bar-students').style.width = sPct + '%'
+      document.getElementById('cap-bar-teachers').style.width = tPct + '%'
+      document.getElementById('cap-bar-students').style.width = sPct + '%'
+      document.getElementById('cap-display-teachers').textContent = `${teacherCount} / ${TEACHER_LIMIT}`
+      document.getElementById('cap-display-students').textContent = `${studentCount} / ${STUDENT_LIMIT.toLocaleString()}`
+
+      // Teachers table
+      const lessonsByTeacher = {}
+      const studentsByTeacher = {}
+      lessons?.forEach(l => { lessonsByTeacher[l.teacher_id] = (lessonsByTeacher[l.teacher_id] || 0) + 1 })
+      tokens?.forEach(t => {
+        const lesson = lessons?.find(l => l.id === t.lesson_id)
+        if (lesson) studentsByTeacher[lesson.teacher_id] = (studentsByTeacher[lesson.teacher_id] || 0) + 1
+      })
+
+      const tbody = document.getElementById('teachers-table')
+      if (!teachers?.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center p-8 text-slate-500">لا يوجد مدرسون مسجلون بعد</td></tr>'
+        return
+      }
+      tbody.innerHTML = teachers.map(t => `
+        <tr class="border-b border-white/5 hover:bg-white/3 transition-colors">
+          <td class="p-4 font-medium text-blue-100">${t.full_name || '—'}</td>
+          <td class="p-4 text-slate-400 text-xs" dir="ltr">${t.id.substring(0,12)}...</td>
+          <td class="p-4 text-center">
+            <span class="bg-blue-500/15 text-blue-300 px-3 py-1 rounded-full text-xs font-bold">
+              ${lessonsByTeacher[t.id] || 0}
+            </span>
+          </td>
+          <td class="p-4 text-center">
+            <span class="bg-green-500/15 text-green-300 px-3 py-1 rounded-full text-xs font-bold">
+              ${studentsByTeacher[t.id] || 0}
+            </span>
+          </td>
+          <td class="p-4 text-slate-500 text-xs">${new Date(t.created_at).toLocaleDateString('ar-EG')}</td>
+        </tr>
+      `).join('')
+    }
+  </script>
+</body>
+</html>
+    }

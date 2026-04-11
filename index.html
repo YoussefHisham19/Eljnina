@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="main-html">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول - الجنينة</title>
+  <script>
+    (function() {
+      if (localStorage.getItem('user_theme') === 'dark') document.documentElement.classList.add('dark');
+    })();
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #faf9f7;
+      --fg: #2d2d2d;
+      --glass: rgba(255,255,255,0.45);
+      --glass-border: rgba(255,255,255,0.6);
+    }
+    .dark {
+      --bg: #0f172a;
+      --fg: #f1f5f9;
+      --glass: rgba(15,23,42,0.6);
+      --glass-border: rgba(255,255,255,0.08);
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Cairo', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1.25rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 1rem;
+      font-family: 'Cairo', sans-serif;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59,130,246,0.4); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-google {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      width: 100%;
+      border: 2px solid rgba(59,130,246,0.2);
+      background: var(--glass);
+      color: var(--fg);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-google:hover { border-color: #3b82f6; transform: translateY(-1px); }
+    .input-field {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      border: 2px solid rgba(59,130,246,0.2);
+      background: var(--glass);
+      color: var(--fg);
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+    .input-field:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .input-field::placeholder { color: #94a3b8; }
+    .role-btn {
+      padding: 0.7rem;
+      border-radius: 0.75rem;
+      border: 2px solid rgba(59,130,246,0.2);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex: 1;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #64748b;
+    }
+    .role-btn.active {
+      border-color: #3b82f6;
+      background: rgba(59,130,246,0.1);
+      color: #3b82f6;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.5rem;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 0.4rem;
+      transition: all 0.2s;
+      color: #64748b;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+      color: white;
+    }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .msg { font-size: 0.85rem; margin-top: 0.4rem; display: none; padding: 0.5rem 0.75rem; border-radius: 0.5rem; }
+    .msg.error { color: #ef4444; background: rgba(239,68,68,0.08); display: block; }
+    .msg.success { color: #10b981; background: rgba(16,185,129,0.08); display: block; }
+  </style>
+</head>
+<body>
+  <!-- Blobs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-1/4 left-1/4 w-64 h-64 bg-green-300/20 rounded-full blur-3xl animate-float" style="animation-delay:2s"></div>
+  </div>
+
+  <!-- Top bar -->
+  <div class="fixed top-4 right-4 flex items-center gap-3 z-50">
+    <a href="index.html" class="font-serif text-xl font-bold text-blue-600 dark:text-blue-300">الجنينة</a>
+  </div>
+  <button onclick="toggleTheme()" class="fixed top-4 left-4 p-2 glass-card hover:scale-110 transition-all z-50">
+    <i id="theme-icon" class="fas fa-moon text-blue-600"></i>
+  </button>
+
+  <!-- Card -->
+  <div class="glass-card w-full max-w-md mx-4 p-8 relative z-10">
+
+    <!-- Tabs -->
+    <div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1 mb-7">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">تسجيل الدخول</button>
+      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">إنشاء حساب</button>
+    </div>
+
+    <!-- ═══ LOGIN ═══ -->
+    <div id="form-login">
+      <h2 class="font-serif text-2xl font-bold text-blue-800 dark:text-blue-100 mb-6 text-center">أهلاً بعودتك 👋</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">البريد الإلكتروني</label>
+          <input type="email" id="login-email" class="input-field" placeholder="example@email.com" dir="ltr">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">كلمة المرور</label>
+          <input type="password" id="login-password" class="input-field" placeholder="••••••••" dir="ltr">
+        </div>
+        <div id="login-msg" class="msg"></div>
+        <button onclick="handleLogin()" id="login-btn" class="btn-primary">دخول</button>
+        <div class="flex items-center gap-3 my-1">
+          <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+          <span class="text-xs text-slate-400">أو</span>
+          <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+        </div>
+        <button onclick="handleGoogle()" class="btn-google">
+          <img src="https://www.google.com/favicon.ico" class="w-4 h-4"> المتابعة بحساب Google
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ REGISTER ═══ -->
+    <div id="form-register" class="hidden">
+      <h2 class="font-serif text-2xl font-bold text-blue-800 dark:text-blue-100 mb-6 text-center">إنشاء حساب جديد 🌱</h2>
+
+      <!-- Role -->
+      <div class="mb-5">
+        <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">أنا...</label>
+        <div class="flex gap-3">
+          <button onclick="selectRole('teacher')" id="role-teacher" class="role-btn active">
+            <i class="fas fa-chalkboard-teacher ml-1"></i> مدرس
+          </button>
+          <button onclick="selectRole('student')" id="role-student" class="role-btn">
+            <i class="fas fa-user-graduate ml-1"></i> طالب
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">الاسم الكامل</label>
+          <input type="text" id="reg-name" class="input-field" placeholder="اسمك بالكامل">
+        </div>
+
+        <!-- Student only: name as teacher knows them -->
+        <div id="display-name-field" class="hidden">
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+            اسمك عند الأستاذ
+            <span class="text-xs text-slate-400 font-normal"> — اللي بيناديك بيه</span>
+          </label>
+          <input type="text" id="reg-display-name" class="input-field" placeholder="مثال: أحمد محمد">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">البريد الإلكتروني</label>
+          <input type="email" id="reg-email" class="input-field" placeholder="example@email.com" dir="ltr">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">كلمة المرور</label>
+          <input type="password" id="reg-password" class="input-field" placeholder="8 أحرف على الأقل" dir="ltr">
+        </div>
+
+        <div id="reg-msg" class="msg"></div>
+        <button onclick="handleRegister()" id="reg-btn" class="btn-primary">إنشاء الحساب</button>
+        <div class="flex items-center gap-3 my-1">
+          <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+          <span class="text-xs text-slate-400">أو</span>
+          <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+        </div>
+        <button onclick="handleGoogle()" class="btn-google">
+          <img src="https://www.google.com/favicon.ico" class="w-4 h-4"> التسجيل بحساب Google
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── CONFIG ─────────────────────────────────────────────────
+    const SUPABASE_URL  = 'https://fpvtcgafpgdvuwtwxunm.supabase.co'
+    const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwdnRjZ2FmcGdkdnV3dHd4dW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzU0NjgsImV4cCI6MjA5MTM1MTQ2OH0.kJl1KcHmfEGByHQqojYJzAbhmTuo90qnxtDpeKIRNU0' // ← ضع الـ anon key هنا
+    const { createClient } = supabase
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    // ── STATE ──────────────────────────────────────────────────
+    let selectedRole = 'teacher'
+
+    // ── TABS ───────────────────────────────────────────────────
+    function switchTab(tab) {
+      const isLogin = tab === 'login'
+      document.getElementById('form-login').classList.toggle('hidden', !isLogin)
+      document.getElementById('form-register').classList.toggle('hidden', isLogin)
+      document.getElementById('tab-login').className  = 'tab-btn ' + (isLogin ? 'active' : '')
+      document.getElementById('tab-register').className = 'tab-btn ' + (!isLogin ? 'active' : '')
+    }
+
+    // ── ROLE ───────────────────────────────────────────────────
+    function selectRole(role) {
+      selectedRole = role
+      document.getElementById('role-teacher').className = 'role-btn ' + (role === 'teacher' ? 'active' : '')
+      document.getElementById('role-student').className  = 'role-btn ' + (role === 'student'  ? 'active' : '')
+      document.getElementById('display-name-field').classList.toggle('hidden', role !== 'student')
+    }
+
+    // ── MESSAGES ───────────────────────────────────────────────
+    function showMsg(id, text, type = 'error') {
+      const el = document.getElementById(id)
+      el.textContent = text
+      el.className = `msg ${type}`
+    }
+    function clearMsg(id) {
+      const el = document.getElementById(id)
+      el.className = 'msg'
+    }
+
+    // ── REDIRECT ───────────────────────────────────────────────
+    function redirectByRole(role) {
+      if (role === 'teacher') window.location.href = 'teacher.html'
+      else if (role === 'student') window.location.href = 'student.html'
+      else window.location.href = 'index.html'
+    }
+
+    // ── LOGIN ──────────────────────────────────────────────────
+    async function handleLogin() {
+      clearMsg('login-msg')
+      const email    = document.getElementById('login-email').value.trim()
+      const password = document.getElementById('login-password').value
+      if (!email || !password) return showMsg('login-msg', 'من فضلك اكمل البيانات')
+
+      const btn = document.getElementById('login-btn')
+      btn.disabled = true; btn.textContent = 'جارٍ الدخول...'
+
+      try {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password })
+        if (error) throw error
+        const { data: profile } = await sb.from('profiles').select('role').eq('id', data.user.id).single()
+        redirectByRole(profile?.role)
+      } catch {
+        showMsg('login-msg', 'البريد أو كلمة المرور غير صحيحة')
+      } finally {
+        btn.disabled = false; btn.textContent = 'دخول'
+      }
+    }
+
+    // ── REGISTER ───────────────────────────────────────────────
+    async function handleRegister() {
+      clearMsg('reg-msg')
+      const name        = document.getElementById('reg-name').value.trim()
+      const email       = document.getElementById('reg-email').value.trim()
+      const password    = document.getElementById('reg-password').value
+      const displayName = document.getElementById('reg-display-name').value.trim()
+
+      if (!name || !email || !password) return showMsg('reg-msg', 'من فضلك اكمل البيانات')
+      if (password.length < 8) return showMsg('reg-msg', 'كلمة المرور 8 أحرف على الأقل')
+      if (selectedRole === 'student' && !displayName) return showMsg('reg-msg', 'اكتب اسمك عند الأستاذ')
+
+      const btn = document.getElementById('reg-btn')
+      btn.disabled = true; btn.textContent = 'جارٍ الإنشاء...'
+
+      try {
+        const { data, error } = await sb.auth.signUp({
+          email, password,
+          options: {
+            data: {
+              full_name: name,
+              role: selectedRole,
+              display_name: selectedRole === 'student' ? displayName : name
+            }
+          }
+        })
+        if (error) throw error
+        showMsg('reg-msg', '✅ تم إنشاء الحساب! جارٍ التوجيه...', 'success')
+        setTimeout(() => redirectByRole(selectedRole), 1500)
+      } catch (err) {
+        const msg = err.message?.includes('already registered') ? 'البريد مسجل بالفعل' : 'حدث خطأ، حاول مرة أخرى'
+        showMsg('reg-msg', msg)
+      } finally {
+        btn.disabled = false; btn.textContent = 'إنشاء الحساب'
+      }
+    }
+
+    // ── GOOGLE ─────────────────────────────────────────────────
+    async function handleGoogle() {
+      await sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/Eljnina/auth.html' }
+      })
+    }
+
+    // ── THEME ──────────────────────────────────────────────────
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark')
+      document.getElementById('theme-icon').className = isDark ? 'fas fa-sun text-yellow-400' : 'fas fa-moon text-blue-600'
+      localStorage.setItem('user_theme', isDark ? 'dark' : 'light')
+    }
+
+    // ── INIT ───────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Sync theme icon
+      if (localStorage.getItem('user_theme') === 'dark') {
+        document.getElementById('theme-icon').className = 'fas fa-sun text-yellow-400'
+      }
+      // If already logged in → redirect
+      const { data: { session } } = await sb.auth.getSession()
+      if (session) {
+        const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single()
+        redirectByRole(profile?.role)
+      }
+    })
+
+    // Enter key support
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return
+      if (!document.getElementById('form-login').classList.contains('hidden')) handleLogin()
+      else handleRegister()
+    })
+  </script>
+</body>
+</html>

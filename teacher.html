@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="main-html">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة المدرس - الجنينة</title>
+  <script>
+    (function() {
+      if (localStorage.getItem('user_theme') === 'dark') document.documentElement.classList.add('dark');
+    })();
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Cairo', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] } } } }
+  </script>
+  <style>
+    :root { --bg:#faf9f7; --fg:#2d2d2d; --glass:rgba(255,255,255,0.45); --glass-border:rgba(255,255,255,0.6); }
+    .dark { --bg:#0f172a; --fg:#f1f5f9; --glass:rgba(15,23,42,0.6); --glass-border:rgba(255,255,255,0.08); }
+    body { background-color:var(--bg); color:var(--fg); font-family:'Cairo',sans-serif; transition:background-color 0.3s,color 0.3s; min-height:100vh; }
+    .glass-card { background:var(--glass); backdrop-filter:blur(24px); border:1px solid var(--glass-border); border-radius:1.25rem; box-shadow:0 8px 40px rgba(0,0,0,0.1); }
+    .glass-nav { background:rgba(255,255,255,0.8); backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.4); }
+    .dark .glass-nav { background:rgba(15,23,42,0.8); border-color:rgba(255,255,255,0.08); }
+    .btn-primary { background:linear-gradient(135deg,#3b82f6 0%,#10b981 100%); color:white; padding:0.7rem 1.4rem; border-radius:0.75rem; font-weight:600; font-family:'Cairo',sans-serif; border:none; cursor:pointer; transition:all 0.3s; box-shadow:0 4px 15px rgba(59,130,246,0.3); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(59,130,246,0.4); }
+    .btn-primary:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+    .btn-danger { background:transparent; color:#ef4444; border:2px solid #ef4444; padding:0.4rem 0.9rem; border-radius:0.6rem; font-family:'Cairo',sans-serif; font-size:0.8rem; cursor:pointer; transition:all 0.2s; }
+    .btn-danger:hover { background:#ef4444; color:white; }
+    .btn-success { background:transparent; color:#10b981; border:2px solid #10b981; padding:0.4rem 0.9rem; border-radius:0.6rem; font-family:'Cairo',sans-serif; font-size:0.8rem; cursor:pointer; transition:all 0.2s; }
+    .btn-success:hover { background:#10b981; color:white; }
+    .input-field { width:100%; padding:0.7rem 1rem; border-radius:0.75rem; border:2px solid rgba(59,130,246,0.2); background:var(--glass); color:var(--fg); font-family:'Cairo',sans-serif; font-size:0.95rem; outline:none; transition:all 0.3s; box-sizing:border-box; }
+    .input-field:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
+    .input-field::placeholder { color:#94a3b8; }
+    .tab-btn { padding:0.5rem 1.2rem; border-radius:0.6rem; border:none; background:transparent; font-family:'Cairo',sans-serif; font-weight:600; cursor:pointer; transition:all 0.2s; color:#64748b; font-size:0.9rem; }
+    .tab-btn.active { background:linear-gradient(135deg,#3b82f6,#10b981); color:white; }
+    .badge-paid { background:rgba(16,185,129,0.15); color:#10b981; padding:0.2rem 0.7rem; border-radius:99px; font-size:0.75rem; font-weight:600; }
+    .badge-unpaid { background:rgba(239,68,68,0.1); color:#ef4444; padding:0.2rem 0.7rem; border-radius:99px; font-size:0.75rem; font-weight:600; }
+    .badge-pending { background:rgba(245,158,11,0.1); color:#f59e0b; padding:0.2rem 0.7rem; border-radius:99px; font-size:0.75rem; font-weight:600; }
+    .status-attended { color:#10b981; font-weight:700; }
+    .status-partial  { color:#f59e0b; font-weight:700; }
+    .status-absent   { color:#ef4444; font-weight:700; }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:100; display:flex; align-items:center; justify-content:center; padding:1rem; }
+    .animate-float { animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+    textarea.input-field { resize:vertical; min-height:80px; }
+  </style>
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-1/4 left-1/4 w-64 h-64 bg-green-300/10 rounded-full blur-3xl animate-float" style="animation-delay:2s"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="glass-nav sticky top-0 z-50 px-6 py-3 flex items-center justify-between">
+    <a href="index.html" class="font-serif text-xl font-bold text-blue-600 dark:text-blue-300">الجنينة</a>
+    <div class="flex items-center gap-3">
+      <span id="teacher-name" class="text-sm font-medium text-blue-700 dark:text-blue-300"></span>
+      <button onclick="toggleTheme()" class="p-2 glass-card hover:scale-110 transition-all">
+        <i id="theme-icon" class="fas fa-moon text-blue-600"></i>
+      </button>
+      <button onclick="handleLogout()" class="text-sm text-red-500 hover:text-red-700 font-medium transition-colors">
+        <i class="fas fa-sign-out-alt ml-1"></i>خروج
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="max-w-6xl mx-auto px-4 py-8">
+
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-8 glass-card inline-flex p-1">
+      <button class="tab-btn active" id="tab-lessons" onclick="switchTab('lessons')">
+        <i class="fas fa-book ml-1"></i>حصصي
+      </button>
+      <button class="tab-btn" id="tab-students" onclick="switchTab('students')">
+        <i class="fas fa-users ml-1"></i>الطلاب
+      </button>
+      <button class="tab-btn" id="tab-attendance" onclick="switchTab('attendance')">
+        <i class="fas fa-chart-bar ml-1"></i>الحضور
+      </button>
+    </div>
+
+    <!-- ═══ TAB: LESSONS ═══ -->
+    <div id="view-lessons">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-blue-800 dark:text-blue-100">حصصي</h2>
+        <button onclick="openLessonModal()" class="btn-primary">
+          <i class="fas fa-plus ml-2"></i>إنشاء حصة
+        </button>
+      </div>
+      <div id="lessons-list" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="glass-card p-8 text-center col-span-2">
+          <i class="fas fa-spinner fa-spin text-blue-400 text-2xl"></i>
+          <p class="text-blue-500 mt-2">جارٍ التحميل...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TAB: STUDENTS ═══ -->
+    <div id="view-students" class="hidden">
+      <h2 class="text-2xl font-bold text-blue-800 dark:text-blue-100 mb-6">الطلاب المسجلين</h2>
+      <div class="glass-card overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-blue-100 dark:border-blue-800">
+              <th class="text-right p-4 text-blue-600 dark:text-blue-400 font-semibold">الاسم</th>
+              <th class="text-right p-4 text-blue-600 dark:text-blue-400 font-semibold">البريد</th>
+              <th class="text-right p-4 text-blue-600 dark:text-blue-400 font-semibold">الحالة</th>
+              <th class="text-right p-4 text-blue-600 dark:text-blue-400 font-semibold">إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="students-table">
+            <tr><td colspan="4" class="text-center p-8 text-blue-400">جارٍ التحميل...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ TAB: ATTENDANCE ═══ -->
+    <div id="view-attendance" class="hidden">
+      <h2 class="text-2xl font-bold text-blue-800 dark:text-blue-100 mb-6">تقرير الحضور</h2>
+      <div class="mb-4">
+        <select id="attendance-lesson-select" class="input-field" style="width:auto;min-width:250px" onchange="loadAttendance(this.value)">
+          <option value="">اختر حصة</option>
+        </select>
+      </div>
+      <div class="glass-card overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-blue-100 dark:border-blue-800">
+              <th class="text-right p-4 text-blue-600 dark:text-blue-400 font-semibold">الطالب</th>
+              <th class="text-right p-4 text-blue-600 dark:text-blue-400 font-semibold">الحالة</th>
+              <th class="text-right p-4 text-blue-600 dark:text-blue-400 font-semibold">وقت المشاهدة</th>
+            </tr>
+          </thead>
+          <tbody id="attendance-table">
+            <tr><td colspan="3" class="text-center p-8 text-blue-400">اختر حصة أولاً</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ MODAL: CREATE LESSON ═══ -->
+  <div id="lesson-modal" class="modal-overlay hidden" onclick="closeLessonModal(event)">
+    <div class="glass-card w-full max-w-lg p-8" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-serif text-xl font-bold text-blue-800 dark:text-blue-100">إنشاء حصة جديدة</h3>
+        <button onclick="closeLessonModal()" class="text-slate-400 hover:text-slate-600 text-xl">&times;</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">عنوان الحصة *</label>
+          <input type="text" id="lesson-title" class="input-field" placeholder="مثال: مقدمة في الجبر">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">رابط YouTube *</label>
+          <input type="url" id="lesson-url" class="input-field" placeholder="https://youtube.com/watch?v=..." dir="ltr">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">وصف الحصة</label>
+          <textarea id="lesson-desc" class="input-field" placeholder="وصف مختصر للحصة..."></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+            نسبة الحضور المطلوبة
+            <span class="text-xs text-slate-400 font-normal"> (افتراضي: 70%)</span>
+          </label>
+          <input type="number" id="lesson-threshold" class="input-field" placeholder="70" min="1" max="100" value="70">
+        </div>
+        <div id="lesson-msg" class="text-sm text-red-500 hidden"></div>
+        <button onclick="createLesson()" id="create-lesson-btn" class="btn-primary w-full">
+          <i class="fas fa-plus ml-2"></i>إنشاء الحصة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── CONFIG ────────────────────────────────────────────────
+    const SUPABASE_URL = 'https://fpvtcgafpgdvuwtwxunm.supabase.co'
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwdnRjZ2FmcGdkdnV3dHd4dW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzU0NjgsImV4cCI6MjA5MTM1MTQ2OH0.kJl1KcHmfEGByHQqojYJzAbhmTuo90qnxtDpeKIRNU0' // ← ضع الـ anon key هنا
+    const { createClient } = supabase
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    // ── STATE ─────────────────────────────────────────────────
+    let currentUser   = null
+    let currentProfile = null
+    let allLessons    = []
+    let allStudents   = []
+
+    // ── INIT ──────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (localStorage.getItem('user_theme') === 'dark') {
+        document.getElementById('theme-icon').className = 'fas fa-sun text-yellow-400'
+      }
+      const { data: { session } } = await sb.auth.getSession()
+      if (!session) return window.location.href = 'auth.html'
+
+      currentUser = session.user
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
+      if (!profile || profile.role !== 'teacher') return window.location.href = 'auth.html'
+      currentProfile = profile
+
+      document.getElementById('teacher-name').textContent = profile.full_name || ''
+      await loadLessons()
+      await loadStudents()
+    })
+
+    // ── TABS ──────────────────────────────────────────────────
+    function switchTab(tab) {
+      ['lessons','students','attendance'].forEach(t => {
+        document.getElementById('view-' + t).classList.toggle('hidden', t !== tab)
+        document.getElementById('tab-' + t).className = 'tab-btn' + (t === tab ? ' active' : '')
+      })
+    }
+
+    // ── LESSONS ───────────────────────────────────────────────
+    async function loadLessons() {
+      const { data } = await sb.from('lessons').select('*').eq('teacher_id', currentUser.id).order('created_at', { ascending: false })
+      allLessons = data || []
+      renderLessons()
+      populateLessonSelect()
+    }
+
+    function renderLessons() {
+      const container = document.getElementById('lessons-list')
+      if (!allLessons.length) {
+        container.innerHTML = `<div class="glass-card p-12 text-center col-span-2">
+          <i class="fas fa-book-open text-blue-300 text-4xl mb-4"></i>
+          <p class="text-blue-500 mb-4">لا توجد حصص بعد</p>
+          <button onclick="openLessonModal()" class="btn-primary">إنشاء أول حصة</button>
+        </div>`
+        return
+      }
+      container.innerHTML = allLessons.map(lesson => `
+        <div class="glass-card p-6">
+          <div class="flex items-start justify-between mb-3">
+            <h3 class="font-bold text-blue-800 dark:text-blue-100 text-lg">${lesson.title}</h3>
+            <button onclick="deleteLesson('${lesson.id}')" class="text-red-400 hover:text-red-600 text-sm transition-colors">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <p class="text-blue-500 dark:text-blue-400 text-sm mb-4 line-clamp-2">${lesson.description || 'بدون وصف'}</p>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xs text-blue-400"><i class="fas fa-eye ml-1"></i>نسبة الحضور: ${lesson.attendance_threshold}%</span>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="copyLessonLink('${lesson.id}')" class="btn-primary text-sm py-2 px-4 flex-1">
+              <i class="fas fa-copy ml-1"></i>نسخ رابط الطالب
+            </button>
+            <button onclick="switchTab('attendance'); document.getElementById('attendance-lesson-select').value='${lesson.id}'; loadAttendance('${lesson.id}')" 
+              class="text-sm py-2 px-4 glass-card text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-all border-0 cursor-pointer font-medium">
+              <i class="fas fa-chart-bar ml-1"></i>الحضور
+            </button>
+          </div>
+        </div>
+      `).join('')
+    }
+
+    async function createLesson() {
+      const title     = document.getElementById('lesson-title').value.trim()
+      const url       = document.getElementById('lesson-url').value.trim()
+      const desc      = document.getElementById('lesson-desc').value.trim()
+      const threshold = parseInt(document.getElementById('lesson-threshold').value) || 70
+      const msgEl     = document.getElementById('lesson-msg')
+
+      if (!title || !url) { msgEl.textContent = 'العنوان والرابط مطلوبان'; msgEl.classList.remove('hidden'); return }
+
+      const btn = document.getElementById('create-lesson-btn')
+      btn.disabled = true; btn.textContent = 'جارٍ الإنشاء...'
+      msgEl.classList.add('hidden')
+
+      try {
+        const { error } = await sb.from('lessons').insert({
+          teacher_id: currentUser.id,
+          title, youtube_url: url, description: desc,
+          attendance_threshold: threshold
+        })
+        if (error) throw error
+        closeLessonModal()
+        // Reset form
+        ;['lesson-title','lesson-url','lesson-desc'].forEach(id => document.getElementById(id).value = '')
+        document.getElementById('lesson-threshold').value = '70'
+        await loadLessons()
+      } catch {
+        msgEl.textContent = 'حدث خطأ، حاول مرة أخرى'
+        msgEl.classList.remove('hidden')
+      } finally {
+        btn.disabled = false; btn.textContent = 'إنشاء الحصة'
+      }
+    }
+
+    async function deleteLesson(id) {
+      if (!confirm('هل تريد حذف هذه الحصة؟')) return
+      await sb.from('lessons').delete().eq('id', id)
+      await loadLessons()
+    }
+
+    function copyLessonLink(lessonId) {
+      const link = `${window.location.origin}/Eljnina/student.html?lesson=${lessonId}`
+      navigator.clipboard.writeText(link)
+      alert('✅ تم نسخ الرابط!\n' + link)
+    }
+
+    // ── STUDENTS ──────────────────────────────────────────────
+    async function loadStudents() {
+      // Get all student tokens for this teacher's lessons
+      const lessonIds = allLessons.map(l => l.id)
+      if (!lessonIds.length) { renderStudents([]); return }
+
+      const { data: tokens } = await sb
+        .from('student_tokens')
+        .select('*, profiles(full_name, display_name:raw_user_meta_data->display_name), lessons(title)')
+        .in('lesson_id', lessonIds)
+
+      allStudents = tokens || []
+      renderStudents(allStudents)
+    }
+
+    function renderStudents(students) {
+      const tbody = document.getElementById('students-table')
+      if (!students.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center p-8 text-blue-400">لا يوجد طلاب مسجلين بعد</td></tr>'
+        return
+      }
+      tbody.innerHTML = students.map(s => `
+        <tr class="border-b border-blue-50 dark:border-blue-900/30 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors">
+          <td class="p-4">
+            <div class="font-medium text-blue-800 dark:text-blue-100">${s.profiles?.full_name || 'غير معروف'}</div>
+            <div class="text-xs text-blue-400">${s.lessons?.title || ''}</div>
+          </td>
+          <td class="p-4 text-blue-500 text-xs" dir="ltr">${s.student_id?.substring(0,8)}...</td>
+          <td class="p-4">
+            ${s.payment_status === 'paid'
+              ? '<span class="badge-paid">✅ دفع</span>'
+              : '<span class="badge-unpaid">❌ لم يدفع</span>'
+            }
+          </td>
+          <td class="p-4">
+            ${s.payment_status !== 'paid'
+              ? `<button onclick="markPaid('${s.id}')" class="btn-success">تأكيد الدفع</button>`
+              : `<button onclick="markUnpaid('${s.id}')" class="btn-danger">إلغاء</button>`
+            }
+          </td>
+        </tr>
+      `).join('')
+    }
+
+    async function markPaid(tokenId) {
+      await sb.from('student_tokens').update({ payment_status: 'paid' }).eq('id', tokenId)
+      await loadStudents()
+    }
+
+    async function markUnpaid(tokenId) {
+      await sb.from('student_tokens').update({ payment_status: 'unpaid' }).eq('id', tokenId)
+      await loadStudents()
+    }
+
+    // ── ATTENDANCE ────────────────────────────────────────────
+    function populateLessonSelect() {
+      const select = document.getElementById('attendance-lesson-select')
+      select.innerHTML = '<option value="">اختر حصة</option>' +
+        allLessons.map(l => `<option value="${l.id}">${l.title}</option>`).join('')
+    }
+
+    async function loadAttendance(lessonId) {
+      if (!lessonId) return
+      const lesson = allLessons.find(l => l.id === lessonId)
+      const threshold = lesson?.attendance_threshold || 70
+
+      const { data: sessions } = await sb
+        .from('watch_sessions')
+        .select('*, profiles(full_name)')
+        .eq('lesson_id', lessonId)
+
+      const tbody = document.getElementById('attendance-table')
+      if (!sessions?.length) {
+        tbody.innerHTML = '<tr><td colspan="3" class="text-center p-8 text-blue-400">لا توجد بيانات لهذه الحصة</td></tr>'
+        return
+      }
+
+      // Get lesson duration from youtube (we use seconds_watched vs threshold)
+      tbody.innerHTML = sessions.map(s => {
+        const mins = Math.floor((s.seconds_watched || 0) / 60)
+        const secs = (s.seconds_watched || 0) % 60
+        // Attendance status based on threshold (assume 60min default duration if unknown)
+        const watched = s.seconds_watched || 0
+        let status, statusClass
+        if (watched === 0) { status = '❌ غائب'; statusClass = 'status-absent' }
+        else if (watched >= threshold * 36) { status = '✅ حضر'; statusClass = 'status-attended' } // 36 = 3600/100
+        else { status = '⚠️ جزئي'; statusClass = 'status-partial' }
+
+        return `
+          <tr class="border-b border-blue-50 dark:border-blue-900/30">
+            <td class="p-4 font-medium text-blue-800 dark:text-blue-100">${s.profiles?.full_name || 'غير معروف'}</td>
+            <td class="p-4 ${statusClass}">${status}</td>
+            <td class="p-4 text-blue-600 dark:text-blue-400">${mins} دقيقة ${secs} ثانية</td>
+          </tr>
+        `
+      }).join('')
+    }
+
+    // ── MODAL ─────────────────────────────────────────────────
+    function openLessonModal() { document.getElementById('lesson-modal').classList.remove('hidden') }
+    function closeLessonModal(e) {
+      if (!e || e.target === document.getElementById('lesson-modal')) {
+        document.getElementById('lesson-modal').classList.add('hidden')
+      }
+    }
+
+    // ── THEME ─────────────────────────────────────────────────
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark')
+      document.getElementById('theme-icon').className = isDark ? 'fas fa-sun text-yellow-400' : 'fas fa-moon text-blue-600'
+      localStorage.setItem('user_theme', isDark ? 'dark' : 'light')
+    }
+
+    // ── LOGOUT ────────────────────────────────────────────────
+    async function handleLogout() {
+      await sb.auth.signOut()
+      window.location.href = 'auth.html'
+    }
+  </script>
+</body>
+</html>

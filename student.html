@@ -1,391 +1,303 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="main-html">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>صفحة الطالب - أ.د. محمد العلي</title>
+  <title>بوابة الطالب - الجنينة</title>
+  <script>
+    (function() {
+      if (localStorage.getItem('user_theme') === 'dark') document.documentElement.classList.add('dark');
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Cairo', 'system-ui', 'sans-serif'],
-            serif: ['Playfair Display', 'Georgia', 'serif'],
-          },
-          colors: {
-            sage: {
-              50: '#f6f7f6', 100: '#e3e6e3', 200: '#c7cdc7', 300: '#a3aea3',
-              400: '#8b958c', 500: '#6b736b', 600: '#545b54', 700: '#454a45',
-              800: '#393d39', 900: '#313431',
-            },
-          },
-        },
-      },
-    }
+    tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Cairo', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] } } } }
   </script>
   <style>
-    :root {
-      --background: #faf9f7;
-      --foreground: #2d2d2d;
-      --glass-bg: rgba(255, 255, 255, 0.4);
-      --glass-border: rgba(255, 255, 255, 0.5);
-    }
-    .dark {
-      --background: #1a1a1a;
-      --foreground: #faf9f7;
-      --glass-bg: rgba(30, 30, 30, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.1);
-    }
-    body {
-      background-color: var(--background);
-      color: var(--foreground);
-      font-family: 'Cairo', system-ui, sans-serif;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    .glass-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 1rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    }
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    .dark .glass-nav {
-      background: rgba(20, 20, 20, 0.7);
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-    .section-padding { padding-left: 1rem; padding-right: 1rem; }
-    @media (min-width: 640px) { .section-padding { padding-left: 1.5rem; padding-right: 1.5rem; } }
-    @media (min-width: 1024px) { .section-padding { padding-left: 2rem; padding-right: 2rem; } }
+    :root { --bg:#faf9f7; --fg:#2d2d2d; --glass:rgba(255,255,255,0.45); --glass-border:rgba(255,255,255,0.6); }
+    .dark { --bg:#0f172a; --fg:#f1f5f9; --glass:rgba(15,23,42,0.6); --glass-border:rgba(255,255,255,0.08); }
+    body { background-color:var(--bg); color:var(--fg); font-family:'Cairo',sans-serif; min-height:100vh; transition:background-color 0.3s,color 0.3s; }
+    .glass-card { background:var(--glass); backdrop-filter:blur(24px); border:1px solid var(--glass-border); border-radius:1.25rem; box-shadow:0 8px 40px rgba(0,0,0,0.1); }
+    .glass-nav { background:rgba(255,255,255,0.8); backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.4); }
+    .dark .glass-nav { background:rgba(15,23,42,0.8); border-color:rgba(255,255,255,0.08); }
+    .animate-float { animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+    .progress-bar { height:8px; border-radius:99px; background:rgba(59,130,246,0.15); overflow:hidden; }
+    .progress-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#3b82f6,#10b981); transition:width 1s ease; }
+    #video-container { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:1rem; }
+    #video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:1rem; }
+    .blocked-screen { background:rgba(239,68,68,0.05); border:2px solid rgba(239,68,68,0.2); border-radius:1.25rem; padding:3rem; text-align:center; }
+    .pending-screen { background:rgba(245,158,11,0.05); border:2px solid rgba(245,158,11,0.2); border-radius:1.25rem; padding:3rem; text-align:center; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="glass-nav sticky top-0 z-50">
-    <div class="section-padding py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-sage-500/20 flex items-center justify-center">
-            <i class="fas fa-user w-5 h-5 text-sage-600"></i>
-          </div>
-          <div>
-            <h1 class="font-serif text-lg font-bold text-sage-800 dark:text-sage-100">أ.د. محمد العلي</h1>
-            <span class="text-xs text-sage-500">حديقة خاصة</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-sage-500/10 text-sage-600 text-sm">
-            <i class="fas fa-graduation-cap w-4 h-4"></i>
-            <span>محتوى حصري</span>
-          </div>
-          <button onclick="toggleTheme()" class="p-2 rounded-lg glass-card hover:bg-sage-100 dark:hover:bg-sage-800 transition-colors">
-            <i id="theme-icon" class="fas fa-moon w-5 h-5 text-sage-600"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
+<body>
 
-  <!-- Main Content -->
-  <main class="section-padding py-8 flex-1">
-    <!-- Teacher Bio Card -->
-    <div class="glass-card p-6 mb-8 max-w-4xl mx-auto">
-      <div class="flex items-start gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-sage-500/20 flex items-center justify-center flex-shrink-0">
-          <i class="fas fa-user w-8 h-8 text-sage-600"></i>
-        </div>
-        <div>
-          <h2 class="text-xl font-bold text-sage-800 dark:text-sage-100 mb-2">أ.د. محمد العلي</h2>
-          <p class="text-sage-600 dark:text-sage-400 leading-relaxed">
-            أستاذ متخصص في الرياضيات والفيزياء مع خبرة 15 عاماً في التدريس. أؤمن بأن كل طالب يملك potential عظيم للنجاح.
-          </p>
-        </div>
-      </div>
-    </div>
+  <!-- Background blobs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-1/4 left-1/4 w-64 h-64 bg-green-300/10 rounded-full blur-3xl animate-float" style="animation-delay:2s"></div>
+  </div>
 
-    <!-- Courses Grid -->
-    <div class="max-w-6xl mx-auto">
-      <h3 class="text-2xl font-bold text-sage-800 dark:text-sage-100 mb-6">الدورات المتاحة</h3>
-
-      <div id="courses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Course 1 -->
-        <div class="glass-card overflow-hidden group cursor-pointer transition-all hover:transform hover:-translate-y-2" onclick="openCourse(1)">
-          <div class="aspect-video bg-gradient-to-br from-sage-200 to-sage-300 dark:from-sage-700 dark:to-sage-800 flex items-center justify-center group-hover:from-sage-300 group-hover:to-sage-400 transition-all">
-            <i class="fas fa-play w-12 h-12 text-sage-600/50 group-hover:text-sage-600 group-hover:scale-110 transition-all"></i>
-          </div>
-          <div class="p-5">
-            <h4 class="font-bold text-lg text-sage-800 dark:text-sage-100 mb-2">الرياضيات المتقدمة</h4>
-            <p class="text-sm text-sage-600 dark:text-sage-400 mb-4 line-clamp-2">شرح مفصل لجميع مفاهيم الرياضيات للمرحلة الثانوية</p>
-            <div class="flex items-center justify-between text-sm text-sage-500 mb-4">
-              <div class="flex items-center gap-4">
-                <span class="flex items-center gap-1"><i class="fas fa-clock w-4 h-4"></i> 12 ساعة</span>
-                <span class="flex items-center gap-1"><i class="fas fa-book-open w-4 h-4"></i> 24 درس</span>
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-sage-700 dark:text-sage-300">350 ر.س</span>
-              <button class="px-4 py-2 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-sm font-medium transition-all">شاهد الآن</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Course 2 -->
-        <div class="glass-card overflow-hidden group cursor-pointer transition-all hover:transform hover:-translate-y-2" onclick="openCourse(2)">
-          <div class="aspect-video bg-gradient-to-br from-sage-200 to-sage-300 dark:from-sage-700 dark:to-sage-800 flex items-center justify-center group-hover:from-sage-300 group-hover:to-sage-400 transition-all">
-            <i class="fas fa-play w-12 h-12 text-sage-600/50 group-hover:text-sage-600 group-hover:scale-110 transition-all"></i>
-          </div>
-          <div class="p-5">
-            <h4 class="font-bold text-lg text-sage-800 dark:text-sage-100 mb-2">الفيزياء الأساسية</h4>
-            <p class="text-sm text-sage-600 dark:text-sage-400 mb-4 line-clamp-2">أساسيات الفيزياء من الصفر حتى الاحتراف</p>
-            <div class="flex items-center justify-between text-sm text-sage-500 mb-4">
-              <div class="flex items-center gap-4">
-                <span class="flex items-center gap-1"><i class="fas fa-clock w-4 h-4"></i> 10 ساعات</span>
-                <span class="flex items-center gap-1"><i class="fas fa-book-open w-4 h-4"></i> 20 درس</span>
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-sage-700 dark:text-sage-300">299 ر.س</span>
-              <button class="px-4 py-2 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-sm font-medium transition-all">شاهد الآن</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Course 3 -->
-        <div class="glass-card overflow-hidden group cursor-pointer transition-all hover:transform hover:-translate-y-2" onclick="openCourse(3)">
-          <div class="aspect-video bg-gradient-to-br from-sage-200 to-sage-300 dark:from-sage-700 dark:to-sage-800 flex items-center justify-center group-hover:from-sage-300 group-hover:to-sage-400 transition-all">
-            <i class="fas fa-play w-12 h-12 text-sage-600/50 group-hover:text-sage-600 group-hover:scale-110 transition-all"></i>
-          </div>
-          <div class="p-5">
-            <h4 class="font-bold text-lg text-sage-800 dark:text-sage-100 mb-2">الكيمياء العضوية</h4>
-            <p class="text-sm text-sage-600 dark:text-sage-400 mb-4 line-clamp-2">تعلم الكيمياء العضوية بأسلوب مبسط وممتع</p>
-            <div class="flex items-center justify-between text-sm text-sage-500 mb-4">
-              <div class="flex items-center gap-4">
-                <span class="flex items-center gap-1"><i class="fas fa-clock w-4 h-4"></i> 15 ساعة</span>
-                <span class="flex items-center gap-1"><i class="fas fa-book-open w-4 h-4"></i> 30 درس</span>
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-sage-700 dark:text-sage-300">400 ر.س</span>
-              <button class="px-4 py-2 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-sm font-medium transition-all">شاهد الآن</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Course 4 -->
-        <div class="glass-card overflow-hidden group cursor-pointer transition-all hover:transform hover:-translate-y-2" onclick="openCourse(4)">
-          <div class="aspect-video bg-gradient-to-br from-sage-200 to-sage-300 dark:from-sage-700 dark:to-sage-800 flex items-center justify-center group-hover:from-sage-300 group-hover:to-sage-400 transition-all">
-            <i class="fas fa-play w-12 h-12 text-sage-600/50 group-hover:text-sage-600 group-hover:scale-110 transition-all"></i>
-          </div>
-          <div class="p-5">
-            <h4 class="font-bold text-lg text-sage-800 dark:text-sage-100 mb-2">التحليل الرياضي</h4>
-            <p class="text-sm text-sage-600 dark:text-sage-400 mb-4 line-clamp-2">مفاهيم التفاضل والتكامل بأسلوب شيق</p>
-            <div class="flex items-center justify-between text-sm text-sage-500 mb-4">
-              <div class="flex items-center gap-4">
-                <span class="flex items-center gap-1"><i class="fas fa-clock w-4 h-4"></i> 18 ساعة</span>
-                <span class="flex items-center gap-1"><i class="fas fa-book-open w-4 h-4"></i> 36 درس</span>
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-sage-700 dark:text-sage-300">450 ر.س</span>
-              <button class="px-4 py-2 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-sm font-medium transition-all">شاهد الآن</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Video Player View (Hidden by default) -->
-    <div id="video-view" class="hidden max-w-5xl mx-auto mt-8">
-      <!-- Back Button -->
-      <button onclick="closeCourse()" class="flex items-center gap-2 text-sage-600 hover:text-sage-800 mb-6 transition-colors">
-        <i class="fas fa-chevron-left w-5 h-5"></i>
-        <span>العودة للدورات</span>
+  <!-- NAVBAR -->
+  <nav class="glass-nav sticky top-0 z-50 px-6 py-3 flex items-center justify-between">
+    <a href="index.html" class="font-serif text-xl font-bold text-blue-600 dark:text-blue-300">الجنينة</a>
+    <div class="flex items-center gap-3">
+      <span id="student-name" class="text-sm font-medium text-blue-700 dark:text-blue-300"></span>
+      <button onclick="toggleTheme()" class="p-2 glass-card hover:scale-110 transition-all">
+        <i id="theme-icon" class="fas fa-moon text-blue-600"></i>
       </button>
-
-      <!-- Video Player -->
-      <div class="glass-card overflow-hidden mb-6">
-        <div class="aspect-video bg-sage-900 relative">
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="text-center">
-              <i class="fas fa-play w-16 h-16 text-sage-400 mx-auto mb-4"></i>
-              <p class="text-sage-400">https://videos.bunny.net/example.mp4</p>
-            </div>
-          </div>
-          <!-- Video Controls -->
-          <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-            <div class="flex items-center gap-4 text-white">
-              <button class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-all">
-                <i class="fas fa-play w-5 h-5"></i>
-              </button>
-              <div class="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
-                <div class="w-1/3 h-full bg-sage-400"></div>
-              </div>
-              <span class="text-sm">12:34 / 12:00:00</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Video Info -->
-        <div class="p-6">
-          <h2 id="course-title" class="text-2xl font-bold text-sage-800 dark:text-sage-100 mb-2">عنوان الدورة</h2>
-          <p id="course-desc" class="text-sage-600 dark:text-sage-400 mb-4">وصف الدورة</p>
-
-          <!-- Take Quiz Button -->
-          <button onclick="openQuiz()" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all">
-            <i class="fas fa-question-circle w-5 h-5"></i>
-            أخذ الاختبار
-          </button>
-        </div>
-      </div>
+      <button onclick="handleLogout()" class="text-sm text-red-500 hover:text-red-700 font-medium transition-colors">
+        <i class="fas fa-sign-out-alt ml-1"></i>خروج
+      </button>
     </div>
-  </main>
+  </nav>
 
-  <!-- Quiz Modal -->
-  <div id="quiz-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-    <div class="glass-card w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between p-6 border-b border-sage-200 dark:border-sage-800">
-        <h3 class="text-xl font-bold text-sage-800 dark:text-sage-100">اختبار: <span id="quiz-title">الرياضيات المتقدمة</span></h3>
-        <button onclick="closeQuiz()" class="w-8 h-8 rounded-full hover:bg-sage-100 dark:hover:bg-sage-800 flex items-center justify-center transition-all">
-          <i class="fas fa-times w-5 h-5 text-sage-600"></i>
-        </button>
-      </div>
-
-      <!-- Quiz Content -->
-      <div class="p-6 space-y-6">
-        <!-- Question 1 -->
-        <div class="space-y-3">
-          <p class="font-medium text-sage-800 dark:text-sage-100">1. ما هو المفهوم الأساسي الذي تم شرحه في الدرس؟</p>
-          <div class="space-y-2">
-            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
-              <input type="radio" name="q1" class="w-4 h-4 text-sage-500">
-              <span class="text-sage-700 dark:text-sage-300">الإجابة أ</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
-              <input type="radio" name="q1" class="w-4 h-4 text-sage-500">
-              <span class="text-sage-700 dark:text-sage-300">الإجابة ب</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
-              <input type="radio" name="q1" class="w-4 h-4 text-sage-500">
-              <span class="text-sage-700 dark:text-sage-300">الإجابة ج</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Question 2 -->
-        <div class="space-y-3">
-          <p class="font-medium text-sage-800 dark:text-sage-100">2. أي من التالي يمثل التطبيق العملي؟</p>
-          <div class="space-y-2">
-            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
-              <input type="radio" name="q2" class="w-4 h-4 text-sage-500">
-              <span class="text-sage-700 dark:text-sage-300">الإجابة أ</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
-              <input type="radio" name="q2" class="w-4 h-4 text-sage-500">
-              <span class="text-sage-700 dark:text-sage-300">الإجابة ب</span>
-            </label>
-            <label class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-sage-800/50 cursor-pointer hover:bg-sage-100 dark:hover:bg-sage-800 transition-all">
-              <input type="radio" name="q2" class="w-4 h-4 text-sage-500">
-              <span class="text-sage-700 dark:text-sage-300">الإجابة ج</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Submit Button -->
-        <button onclick="submitQuiz()" class="w-full py-3 rounded-xl bg-sage-500 hover:bg-sage-600 text-white font-medium transition-all">
-          إرسال
-        </button>
-      </div>
+  <!-- MAIN CONTENT -->
+  <div class="max-w-4xl mx-auto px-4 py-8" id="main-content">
+    <div class="glass-card p-12 text-center">
+      <i class="fas fa-spinner fa-spin text-blue-400 text-3xl"></i>
+      <p class="text-blue-500 mt-3">جارٍ التحميل...</p>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="section-padding py-6 border-t border-sage-200 dark:border-sage-800 mt-auto">
-    <div class="text-center text-sm text-sage-500">
-      <p>© 2024 أ.د. محمد العلي - حديقة خاصة</p>
-      <p class="mt-1 text-xs">هذه الصفحة خاصة ولا يمكن الوصول إليها إلا عبر رابط مباشر</p>
-    </div>
-  </footer>
-
   <script>
-    const coursesData = {
-      1: { title: 'الرياضيات المتقدمة', desc: 'شرح مفصل لجميع مفاهيم الرياضيات للمرحلة الثانوية' },
-      2: { title: 'الفيزياء الأساسية', desc: 'أساسيات الفيزياء من الصفر حتى الاحتراف' },
-      3: { title: 'الكيمياء العضوية', desc: 'تعلم الكيمياء العضوية بأسلوب مبسط وممتع' },
-      4: { title: 'التحليل الرياضي', desc: 'مفاهيم التفاضل والتكامل بأسلوب شيق' }
-    };
+    // ── CONFIG ────────────────────────────────────────────────
+    const SUPABASE_URL = 'https://fpvtcgafpgdvuwtwxunm.supabase.co'
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwdnRjZ2FmcGdkdnV3dHd4dW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzU0NjgsImV4cCI6MjA5MTM1MTQ2OH0.kJl1KcHmfEGByHQqojYJzAbhmTuo90qnxtDpeKIRNU0' // ← ضع الـ anon key هنا
+    const { createClient } = supabase
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-    // Theme toggle
-    function toggleTheme() {
-      const html = document.documentElement;
-      const icon = document.getElementById('theme-icon');
-      if (html.classList.contains('dark')) {
-        html.classList.remove('dark');
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-        localStorage.setItem('theme', 'light');
+    // ── STATE ─────────────────────────────────────────────────
+    let currentUser    = null
+    let currentLesson  = null
+    let currentToken   = null
+    let watchInterval  = null
+    let secondsWatched = 0
+
+    // ── INIT ──────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (localStorage.getItem('user_theme') === 'dark') {
+        document.getElementById('theme-icon').className = 'fas fa-sun text-yellow-400'
+      }
+
+      const { data: { session } } = await sb.auth.getSession()
+      if (!session) {
+        // Save intended lesson URL and redirect to auth
+        sessionStorage.setItem('redirect_after_auth', window.location.href)
+        return window.location.href = 'auth.html'
+      }
+
+      currentUser = session.user
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
+      if (!profile || profile.role !== 'student') return window.location.href = 'auth.html'
+
+      document.getElementById('student-name').textContent = profile.full_name || ''
+
+      // Check if lesson param exists
+      const lessonId = new URLSearchParams(window.location.search).get('lesson')
+      if (lessonId) {
+        await loadLesson(lessonId, profile)
       } else {
-        html.classList.add('dark');
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-        localStorage.setItem('theme', 'dark');
+        showNoLesson()
       }
-    }
+    })
 
-    // Open course
-    function openCourse(id) {
-      const course = coursesData[id];
-      document.getElementById('course-title').textContent = course.title;
-      document.getElementById('course-desc').textContent = course.desc;
-      document.getElementById('quiz-title').textContent = course.title;
-      
-      document.getElementById('courses-grid').classList.add('hidden');
-      document.getElementById('video-view').classList.remove('hidden');
-    }
+    // ── LOAD LESSON ───────────────────────────────────────────
+    async function loadLesson(lessonId, profile) {
+      const { data: lesson, error } = await sb.from('lessons').select('*').eq('id', lessonId).single()
+      if (error || !lesson) return showError('الحصة غير موجودة')
+      currentLesson = lesson
 
-    // Close course
-    function closeCourse() {
-      document.getElementById('courses-grid').classList.remove('hidden');
-      document.getElementById('video-view').classList.add('hidden');
-      closeQuiz();
-    }
+      // Check or create student token
+      let { data: token } = await sb
+        .from('student_tokens')
+        .select('*')
+        .eq('lesson_id', lessonId)
+        .eq('student_id', currentUser.id)
+        .single()
 
-    // Open quiz
-    function openQuiz() {
-      document.getElementById('quiz-modal').classList.remove('hidden');
-    }
-
-    // Close quiz
-    function closeQuiz() {
-      document.getElementById('quiz-modal').classList.add('hidden');
-    }
-
-    // Submit quiz
-    function submitQuiz() {
-      alert('تم إرسال إجاباتك بنجاح!');
-      closeQuiz();
-    }
-
-    // Load saved theme
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-        const icon = document.getElementById('theme-icon');
-        if (icon) {
-          icon.classList.remove('fa-moon');
-          icon.classList.add('fa-sun');
-        }
+      if (!token) {
+        // Create token — student is registered, awaiting teacher approval
+        const { data: newToken } = await sb.from('student_tokens').insert({
+          lesson_id: lessonId,
+          student_id: currentUser.id,
+          payment_status: 'unpaid',
+          is_locked: false
+        }).select().single()
+        token = newToken
       }
-    });
+
+      currentToken = token
+
+      // Check payment status
+      if (token.payment_status !== 'paid') {
+        return showPending(lesson, profile)
+      }
+
+      // Check device lock
+      const userAgent = navigator.userAgent
+      const ip = '' // IP checked server-side via Supabase Edge if needed
+
+      if (token.is_locked && token.user_agent && token.user_agent !== userAgent) {
+        return showBlocked()
+      }
+
+      // Lock token to this device
+      if (!token.is_locked) {
+        await sb.from('student_tokens').update({
+          is_locked: true,
+          user_agent: userAgent,
+          start_time: new Date().toISOString()
+        }).eq('id', token.id)
+      }
+
+      // Load existing watch session
+      const { data: session_data } = await sb
+        .from('watch_sessions')
+        .select('*')
+        .eq('token_id', token.id)
+        .eq('student_id', currentUser.id)
+        .single()
+
+      secondsWatched = session_data?.seconds_watched || 0
+
+      showLesson(lesson)
+    }
+
+    // ── SHOW LESSON ───────────────────────────────────────────
+    function showLesson(lesson) {
+      const videoId = extractYouTubeId(lesson.youtube_url)
+      const main = document.getElementById('main-content')
+
+      main.innerHTML = `
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-blue-800 dark:text-blue-100 mb-1">${lesson.title}</h1>
+          <p class="text-blue-500 dark:text-blue-400">${lesson.description || ''}</p>
+        </div>
+
+        <div class="glass-card p-4 mb-6">
+          <div id="video-container">
+            <iframe src="https://www.youtube.com/embed/${videoId}?enablejsapi=1" 
+              allowfullscreen id="yt-player"></iframe>
+          </div>
+        </div>
+
+        <div class="glass-card p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-blue-700 dark:text-blue-300">وقت المشاهدة</span>
+            <span id="watch-display" class="text-sm font-bold text-blue-600">0 دقيقة</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+          <p class="text-xs text-blue-400 mt-2">نسبة الحضور المطلوبة: ${lesson.attendance_threshold}% من مدة الحصة</p>
+        </div>
+      `
+
+      startWatchTracking()
+    }
+
+    // ── WATCH TRACKING ────────────────────────────────────────
+    function startWatchTracking() {
+      // Update every 10 seconds
+      watchInterval = setInterval(async () => {
+        secondsWatched += 10
+        updateWatchUI()
+
+        // Upsert to watch_sessions
+        await sb.from('watch_sessions').upsert({
+          token_id: currentToken.id,
+          student_id: currentUser.id,
+          lesson_id: currentLesson.id,
+          seconds_watched: secondsWatched,
+          last_updated: new Date().toISOString()
+        }, { onConflict: 'token_id' })
+      }, 10000)
+
+      // Also update when page closes
+      window.addEventListener('beforeunload', () => {
+        clearInterval(watchInterval)
+      })
+    }
+
+    function updateWatchUI() {
+      const mins = Math.floor(secondsWatched / 60)
+      const display = document.getElementById('watch-display')
+      const fill    = document.getElementById('progress-fill')
+      if (display) display.textContent = `${mins} دقيقة`
+      // Progress vs threshold (assume 60min lesson default)
+      const pct = Math.min(100, (secondsWatched / (currentLesson?.attendance_threshold * 36)) * 100)
+      if (fill) fill.style.width = pct + '%'
+    }
+
+    // ── SCREENS ───────────────────────────────────────────────
+    function showPending(lesson, profile) {
+      document.getElementById('main-content').innerHTML = `
+        <div class="pending-screen">
+          <i class="fas fa-clock text-yellow-500 text-5xl mb-4"></i>
+          <h2 class="font-serif text-2xl font-bold text-yellow-700 dark:text-yellow-300 mb-3">في انتظار التأكيد</h2>
+          <p class="text-yellow-600 dark:text-yellow-400 mb-2">تم تسجيلك في حصة <strong>${lesson.title}</strong></p>
+          <p class="text-sm text-yellow-500">بمجرد تأكيد الدفع من المدرس ستتمكن من الدخول تلقائياً</p>
+          <div class="mt-6 glass-card p-4 inline-block text-right">
+            <p class="text-xs text-blue-400 mb-1">اسمك المسجل:</p>
+            <p class="font-bold text-blue-700 dark:text-blue-300">${profile.full_name}</p>
+          </div>
+        </div>
+      `
+    }
+
+    function showBlocked() {
+      document.getElementById('main-content').innerHTML = `
+        <div class="blocked-screen">
+          <i class="fas fa-lock text-red-500 text-5xl mb-4"></i>
+          <h2 class="font-serif text-2xl font-bold text-red-700 dark:text-red-300 mb-3">هذا الرابط مفتوح على جهاز آخر</h2>
+          <p class="text-red-500">لا يمكن فتح الحصة على أكثر من جهاز في نفس الوقت</p>
+          <p class="text-sm text-red-400 mt-2">تواصل مع المدرس إذا كنت تعتقد أن هذا خطأ</p>
+        </div>
+      `
+    }
+
+    function showNoLesson() {
+      document.getElementById('main-content').innerHTML = `
+        <div class="glass-card p-12 text-center">
+          <i class="fas fa-seedling text-blue-300 text-5xl mb-4"></i>
+          <h2 class="font-serif text-2xl font-bold text-blue-800 dark:text-blue-100 mb-3">أهلاً بك في الجنينة</h2>
+          <p class="text-blue-500">انتظر رابط الحصة من مدرسك</p>
+        </div>
+      `
+    }
+
+    function showError(msg) {
+      document.getElementById('main-content').innerHTML = `
+        <div class="glass-card p-12 text-center">
+          <i class="fas fa-exclamation-triangle text-red-400 text-4xl mb-4"></i>
+          <p class="text-red-500">${msg}</p>
+        </div>
+      `
+    }
+
+    // ── UTILS ─────────────────────────────────────────────────
+    function extractYouTubeId(url) {
+      const match = url.match(/(?:v=|youtu\.be\/)([^&\n?#]+)/)
+      return match ? match[1] : ''
+    }
+
+    // ── THEME ─────────────────────────────────────────────────
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark')
+      document.getElementById('theme-icon').className = isDark ? 'fas fa-sun text-yellow-400' : 'fas fa-moon text-blue-600'
+      localStorage.setItem('user_theme', isDark ? 'dark' : 'light')
+    }
+
+    // ── LOGOUT ────────────────────────────────────────────────
+    async function handleLogout() {
+      clearInterval(watchInterval)
+      await sb.auth.signOut()
+      window.location.href = 'auth.html'
+    }
   </script>
 </body>
 </html>
